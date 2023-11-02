@@ -1,21 +1,34 @@
- --Tabla Usuario 
+
+
+
+--Tabla Usuario 
 CREATE TABLE Usuario (
-    Nombre VARCHAR(20),
-    Apellido1 VARCHAR(20),
+    Nombre VARCHAR(20) NOT NULL,
+    Apellido1 VARCHAR(20) NOT NULL,
     Apellido2 VARCHAR(20),
-    Fecha_nacimiento DATE,
+    Fecha_nacimiento DATE NOT NULL,
     Fecha_actual AS GETDATE(),
-    Nacionalidad VARCHAR(20),
+    Nacionalidad VARCHAR(20) NOT NULL,
     Foto VARCHAR(250),
-    Usuario VARCHAR(15),
-	Contraseña VARCHAR(15),
+    Usuario VARCHAR(15) NOT NULL,
+	Contraseña VARCHAR(15) NOT NULL,
 	PRIMARY KEY(Usuario),
     UNIQUE (Contraseña),
     Edad AS DATEDIFF(YEAR, Fecha_nacimiento, GETDATE()) 
 );
 
+-- Tabla Amigo
+CREATE TABLE Amigo (
+  UsuarioOrigen VARCHAR(15) NOT NULL,
+  UsuarioDestino VARCHAR(15) NOT NULL,
+  PRIMARY KEY (UsuarioOrigen, UsuarioDestino),
+  FOREIGN KEY (UsuarioOrigen) REFERENCES Usuario(Usuario),
+  FOREIGN KEY (UsuarioDestino) REFERENCES Usuario(Usuario)
+);
 
-	--Actividad 
+
+
+--Actividad 
 CREATE TABLE Actividad(
 	TipoActividad VARCHAR(20), 
 	Kilometraje INT, 
@@ -24,73 +37,73 @@ CREATE TABLE Actividad(
 	Fecha DATE,
 	Hora TIME, 
 	Duracion TIME, 
-	ActividadID INT,
+	ActividadID INT NOT NULL,
 	Usuario VARCHAR(15),
 	PRIMARY KEY(ActividadID),
 	FOREIGN KEY (Usuario) REFERENCES Usuario(Usuario), 
 	);
 
-	--Reto 
+--Reto 
 CREATE TABLE Reto (
 	Privacidad VARCHAR(20),
-	Periodo int, 
+	Periodo INT NOT NULL, 
 	TipoActividad VARCHAR(20), 
 	Altitud VARCHAR(2),
 	Fondo VARCHAR(2),
-	NombreReto VARCHAR(20),
+	NombreReto VARCHAR(20) NOT NULL,
 	PRIMARY KEY(NombreReto),
 );
 
 
-	--Carrera
+--Carrera
 CREATE TABLE Carrera(
-	Costo int, 
-	Modalidad VARCHAR(20),
+	Costo int NOT NULL, 
+	Modalidad VARCHAR(20) NOT NULL,
 	FechaCarrera DATE,
 	Recorrido VARCHAR(20),
-	NombreCarrera VARCHAR(20),
+	NombreCarrera VARCHAR(20) NOT NULL,
 	PRIMARY KEY (NombreCarrera),
 );
 
 
-	--Patrocinador 
+--Patrocinador 
 CREATE TABLE Patrocinador(
-	NombreLegal VARCHAR(20), 
+	NombreLegal VARCHAR(20) NOT NULL, 
 	Logo VARCHAR(250),
 	Telefono INT,
-	NombreComercial VARCHAR(20),
+	NombreComercial VARCHAR(20) NOT NULL,
 	PRIMARY KEY(NombreComercial),
 
 );
 
-	--Grupo
+--Grupo
 CREATE TABLE Grupo( 
-	NombreGrupo VARCHAR(20),
+	NombreGrupo VARCHAR(20) NOT NULL,
 	Descripcion VARCHAR(50),
-	Administrador VARCHAR(20),
+	Administrador VARCHAR(20) NOT NULL,
 	Creacion DATE,
-	GrupoID VARCHAR(20), 
+	GrupoID VARCHAR(20) NOT NULL, 
 	PRIMARY KEY (GrupoID),
 
 );
 
-	--Comentario 
+--Comentario 
 CREATE TABLE Comentario(
-	Contenido VARCHAR(100),
+	Contenido VARCHAR(100) NOT NULL,
 	FechaPublicacion DATE,
 	Usuario VARCHAR(15),
 	ActividadID INT,
-	ComentarioID INT PRIMARY KEY,
+	ComentarioID INT PRIMARY KEY NOT NULL,
 	FOREIGN KEY (Usuario) REFERENCES Usuario(Usuario),
 	FOREIGN KEY (ActividadID) REFERENCES Actividad(ActividadID),
 );
 
 
-	--Categoria 
+--Categoria 
 CREATE TABLE Categoria (
-    NombreCategoria VARCHAR(20),
+    NombreCategoria VARCHAR(20) NOT NULL,
     DescripcionCategoria VARCHAR(100),
-    NombreCarrera VARCHAR(20),
+    NombreCarrera VARCHAR(20) NOT NULL,
     PRIMARY KEY (NombreCategoria, NombreCarrera),
     FOREIGN KEY (NombreCarrera) REFERENCES Carrera(NombreCarrera)
 );
@@ -105,7 +118,7 @@ CREATE TABLE UsuariosPorReto (
     FOREIGN KEY (NombreReto) REFERENCES Reto(NombreReto)
 );
 
-	--UsuariosPorCarrera
+--UsuariosPorCarrera
 CREATE TABLE UsuariosPorCarrera (
     Usuario VARCHAR(15),
     NombreCarrera VARCHAR(20),
@@ -114,7 +127,7 @@ CREATE TABLE UsuariosPorCarrera (
     FOREIGN KEY (NombreCarrera) REFERENCES Carrera(NombreCarrera)
 );
 
-	--UsuariosPorGrupo
+--UsuariosPorGrupo
 CREATE TABLE UsuariosPorGrupo(
     Usuario VARCHAR(15),
     GrupoID VARCHAR(20),
@@ -123,7 +136,7 @@ CREATE TABLE UsuariosPorGrupo(
     FOREIGN KEY (GrupoID) REFERENCES Grupo(GrupoID),
 );
 
-	--PatrocinadoresPorReto
+--PatrocinadoresPorReto
 CREATE TABLE PatrocinadoresPorReto(
     NombreReto VARCHAR(20),
     NombreComercial VARCHAR(20),
@@ -132,7 +145,7 @@ CREATE TABLE PatrocinadoresPorReto(
     FOREIGN KEY (NombreComercial) REFERENCES Patrocinador(NombreComercial),
 );
 
-	--PatrocinadoresPorReto
+--PatrocinadoresPorReto
 CREATE TABLE PatrocinadoresPorCarrera(
     NombreCarrera VARCHAR(20),
     NombreComercial VARCHAR(20),
@@ -141,9 +154,9 @@ CREATE TABLE PatrocinadoresPorCarrera(
     FOREIGN KEY (NombreComercial) REFERENCES Patrocinador(NombreComercial),
 );
 
-	--CuentasBancarias 
+--CuentasBancarias 
 CREATE TABLE CuentasBancarias (
-    NombreCarrera VARCHAR(20), 
+    NombreCarrera VARCHAR(20) NOT NULL, 
     NombreBanco VARCHAR(50),
     NumeroCuenta VARCHAR(20),
     PRIMARY KEY (NombreCarrera, NumeroCuenta),
