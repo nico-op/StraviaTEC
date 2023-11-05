@@ -31,7 +31,8 @@ class ActivityScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(  // Cambiado de RaisedButton a ElevatedButton
+            ElevatedButton(
+              // Cambiado de RaisedButton a ElevatedButton
               onPressed: () async {
                 Position position = await Geolocator.getCurrentPosition(
                   desiredAccuracy: LocationAccuracy.high,
