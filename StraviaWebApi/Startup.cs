@@ -1,7 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-
-
-namespace StraviaWwebApi
+using StraviaWebApi.Data;
+   
+namespace StraviaWebApi
 {
     public class Startup
     {
@@ -16,7 +17,6 @@ namespace StraviaWwebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddControllersWithViews();
             services.AddEndpointsApiExplorer();
 
             services.AddCors(options => {
@@ -27,7 +27,11 @@ namespace StraviaWwebApi
                 });
             });
 
-            
+            // Agrega el DbContext como servicio
+            services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
 
             services.AddSwaggerGen(c =>
             {

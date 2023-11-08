@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 
-namespace StraviaWwebApi;
+namespace StraviaWebApi;
 
 /// <summary>
 /// Es el programa principal
