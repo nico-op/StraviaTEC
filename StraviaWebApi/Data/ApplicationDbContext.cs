@@ -35,6 +35,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
+
+    // Cambiar al nombre se su servidor local aquí
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Server=DESKTOP-45ERV0H\\SQLEXPRESS04;Database=StraviaTEC;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;");
 
