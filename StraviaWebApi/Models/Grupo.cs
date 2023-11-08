@@ -15,5 +15,4 @@ public partial class Grupo
 
     public string GrupoId { get; set; } = null!;
 
-    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 }

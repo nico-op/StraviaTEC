@@ -15,7 +15,5 @@ public partial class Comentario
 
     public int ComentarioId { get; set; }
 
-    public virtual Actividad Actividad { get; set; }
 
-    public virtual Usuario UsuarioNavigation { get; set; }
 }

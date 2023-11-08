@@ -11,5 +11,5 @@ public partial class Categorium
 
     public string NombreCarrera { get; set; } = null!;
 
-    public virtual Carrera NombreCarreraNavigation { get; set; } = null!;
+
 }

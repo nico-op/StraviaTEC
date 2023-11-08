@@ -60,9 +60,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(15)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.UsuarioNavigation).WithMany(p => p.Actividads)
-                .HasForeignKey(d => d.Usuario)
-                .HasConstraintName("FK__Actividad__Usuar__3A81B327");
+
         });
 
         modelBuilder.Entity<Carrera>(entity =>
@@ -82,28 +80,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
 
-            entity.HasMany(d => d.NombreComercials).WithMany(p => p.NombreCarreras)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PatrocinadoresPorCarrera",
-                    r => r.HasOne<Patrocinador>().WithMany()
-                        .HasForeignKey("NombreComercial")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Patrocina__Nombr__5BE2A6F2"),
-                    l => l.HasOne<Carrera>().WithMany()
-                        .HasForeignKey("NombreCarrera")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Patrocina__Nombr__5AEE82B9"),
-                    j =>
-                    {
-                        j.HasKey("NombreCarrera", "NombreComercial").HasName("PK__Patrocin__4D503BCD49AE944B");
-                        j.ToTable("PatrocinadoresPorCarrera");
-                        j.IndexerProperty<string>("NombreCarrera")
-                            .HasMaxLength(20)
-                            .IsUnicode(false);
-                        j.IndexerProperty<string>("NombreComercial")
-                            .HasMaxLength(20)
-                            .IsUnicode(false);
-                    });
         });
 
         modelBuilder.Entity<Categorium>(entity =>
@@ -120,10 +96,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.NombreCarreraNavigation).WithMany(p => p.Categoria)
-                .HasForeignKey(d => d.NombreCarrera)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Categoria__Nombr__48CFD27E");
+
         });
 
         modelBuilder.Entity<Comentario>(entity =>
@@ -144,13 +117,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(15)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Actividad).WithMany(p => p.Comentarios)
-                .HasForeignKey(d => d.ActividadId)
-                .HasConstraintName("FK__Comentari__Activ__45F365D3");
 
-            entity.HasOne(d => d.UsuarioNavigation).WithMany(p => p.Comentarios)
-                .HasForeignKey(d => d.Usuario)
-                .HasConstraintName("FK__Comentari__Usuar__44FF419A");
         });
 
         modelBuilder.Entity<CuentasBancaria>(entity =>
@@ -167,10 +134,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.NombreCarreraNavigation).WithMany(p => p.CuentasBancaria)
-                .HasForeignKey(d => d.NombreCarrera)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CuentasBa__Nombr__5EBF139D");
         });
 
         modelBuilder.Entity<Grupo>(entity =>
@@ -234,28 +197,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
 
-            entity.HasMany(d => d.NombreComercials).WithMany(p => p.NombreRetos)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PatrocinadoresPorReto",
-                    r => r.HasOne<Patrocinador>().WithMany()
-                        .HasForeignKey("NombreComercial")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Patrocina__Nombr__5812160E"),
-                    l => l.HasOne<Reto>().WithMany()
-                        .HasForeignKey("NombreReto")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Patrocina__Nombr__571DF1D5"),
-                    j =>
-                    {
-                        j.HasKey("NombreReto", "NombreComercial").HasName("PK__Patrocin__518BD65DAEB866EE");
-                        j.ToTable("PatrocinadoresPorReto");
-                        j.IndexerProperty<string>("NombreReto")
-                            .HasMaxLength(20)
-                            .IsUnicode(false);
-                        j.IndexerProperty<string>("NombreComercial")
-                            .HasMaxLength(20)
-                            .IsUnicode(false);
-                    });
         });
 
         modelBuilder.Entity<Usuario>(entity =>
@@ -296,122 +237,6 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Nombre)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-
-            entity.HasMany(d => d.Grupos).WithMany(p => p.Usuarios)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UsuariosPorGrupo",
-                    r => r.HasOne<Grupo>().WithMany()
-                        .HasForeignKey("GrupoId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UsuariosP__Grupo__5441852A"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("Usuario")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UsuariosP__Usuar__534D60F1"),
-                    j =>
-                    {
-                        j.HasKey("Usuario", "GrupoId").HasName("PK__Usuarios__F675C3F05B0CA7B2");
-                        j.ToTable("UsuariosPorGrupo");
-                        j.IndexerProperty<string>("Usuario")
-                            .HasMaxLength(15)
-                            .IsUnicode(false);
-                        j.IndexerProperty<string>("GrupoId")
-                            .HasMaxLength(20)
-                            .IsUnicode(false)
-                            .HasColumnName("GrupoID");
-                    });
-
-            entity.HasMany(d => d.NombreCarreras).WithMany(p => p.Usuarios)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UsuariosPorCarrera",
-                    r => r.HasOne<Carrera>().WithMany()
-                        .HasForeignKey("NombreCarrera")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UsuariosP__Nombr__5070F446"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("Usuario")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UsuariosP__Usuar__4F7CD00D"),
-                    j =>
-                    {
-                        j.HasKey("Usuario", "NombreCarrera").HasName("PK__Usuarios__25F341231A3F448F");
-                        j.ToTable("UsuariosPorCarrera");
-                        j.IndexerProperty<string>("Usuario")
-                            .HasMaxLength(15)
-                            .IsUnicode(false);
-                        j.IndexerProperty<string>("NombreCarrera")
-                            .HasMaxLength(20)
-                            .IsUnicode(false);
-                    });
-
-            entity.HasMany(d => d.NombreRetos).WithMany(p => p.Usuarios)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UsuariosPorReto",
-                    r => r.HasOne<Reto>().WithMany()
-                        .HasForeignKey("NombreReto")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UsuariosP__Nombr__4CA06362"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("Usuario")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__UsuariosP__Usuar__4BAC3F29"),
-                    j =>
-                    {
-                        j.HasKey("Usuario", "NombreReto").HasName("PK__Usuarios__243EFFFA3A5DD3DD");
-                        j.ToTable("UsuariosPorReto");
-                        j.IndexerProperty<string>("Usuario")
-                            .HasMaxLength(15)
-                            .IsUnicode(false);
-                        j.IndexerProperty<string>("NombreReto")
-                            .HasMaxLength(20)
-                            .IsUnicode(false);
-                    });
-
-            entity.HasMany(d => d.UsuarioDestinos).WithMany(p => p.UsuarioOrigens)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Amigo",
-                    r => r.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("UsuarioDestino")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Amigo__UsuarioDe__37A5467C"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("UsuarioOrigen")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Amigo__UsuarioOr__36B12243"),
-                    j =>
-                    {
-                        j.HasKey("UsuarioOrigen", "UsuarioDestino").HasName("PK__Amigo__33A0BA5293F74F15");
-                        j.ToTable("Amigo");
-                        j.IndexerProperty<string>("UsuarioOrigen")
-                            .HasMaxLength(15)
-                            .IsUnicode(false);
-                        j.IndexerProperty<string>("UsuarioDestino")
-                            .HasMaxLength(15)
-                            .IsUnicode(false);
-                    });
-
-            entity.HasMany(d => d.UsuarioOrigens).WithMany(p => p.UsuarioDestinos)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Amigo",
-                    r => r.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("UsuarioOrigen")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Amigo__UsuarioOr__36B12243"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("UsuarioDestino")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Amigo__UsuarioDe__37A5467C"),
-                    j =>
-                    {
-                        j.HasKey("UsuarioOrigen", "UsuarioDestino").HasName("PK__Amigo__33A0BA5293F74F15");
-                        j.ToTable("Amigo");
-                        j.IndexerProperty<string>("UsuarioOrigen")
-                            .HasMaxLength(15)
-                            .IsUnicode(false);
-                        j.IndexerProperty<string>("UsuarioDestino")
-                            .HasMaxLength(15)
-                            .IsUnicode(false);
-                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

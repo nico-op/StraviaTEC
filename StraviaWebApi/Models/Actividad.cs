@@ -25,7 +25,4 @@ public partial class Actividad
 
     public string Usuario { get; set; }
 
-    public virtual ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
-
-    public virtual Usuario UsuarioNavigation { get; set; }
 }

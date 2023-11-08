@@ -11,5 +11,5 @@ public partial class CuentasBancaria
 
     public string NumeroCuenta { get; set; } = null!;
 
-    public virtual Carrera NombreCarreraNavigation { get; set; } = null!;
+
 }

@@ -13,7 +13,5 @@ public partial class Patrocinador
 
     public string NombreComercial { get; set; } = null!;
 
-    public virtual ICollection<Carrera> NombreCarreras { get; set; } = new List<Carrera>();
 
-    public virtual ICollection<Reto> NombreRetos { get; set; } = new List<Reto>();
 }
