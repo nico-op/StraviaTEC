@@ -32,15 +32,21 @@ namespace StraviaWebApi
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(string id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            // Define el nombre del stored procedure que deseas ejecutar
+            string storedProcedureName = "ObtenerUsuario";
 
-            if (usuario == null)
+            // Ejecuta el stored procedure y obtén los resultados
+            var results = await _context.Set<Usuario>().FromSqlRaw($"EXEC {storedProcedureName} @Usuario = {id}").ToListAsync();
+
+            if (results.Count == 0)
             {
                 return NotFound();
             }
 
-            return usuario;
+            // Devuelve el primer resultado
+            return results.First();
         }
+
 
         // PUT: api/Usuario/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
