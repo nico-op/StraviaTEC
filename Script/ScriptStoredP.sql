@@ -18,9 +18,14 @@ CREATE PROCEDURE ObtenerUsuario
     @Usuario VARCHAR(15)
 AS
 BEGIN
-    SELECT *
-    FROM Usuario
-    WHERE Usuario = @Usuario;
+    BEGIN TRY
+        SELECT *
+        FROM Usuario
+        WHERE Usuario = @Usuario;
+    END TRY
+    BEGIN CATCH
+		RETURN -1;
+    END CATCH;
 END;
 
 -- METODO POST
