@@ -178,6 +178,71 @@ END
 
 
 ----------------------------------------------
+-- Stored Procedures de Carrera 
+
+--obtener 
+CREATE PROCEDURE ObtenerCarrera
+    @nombreCarrera VARCHAR(20)
+AS
+BEGIN
+    -- Verificar si la carrera existe
+    IF EXISTS (SELECT 1 FROM Carrera WHERE NombreCarrera = @nombreCarrera)
+    BEGIN
+        -- La carrera existe, obtener la información de la carrera
+        SELECT Costo, Modalidad, FechaCarrera, Recorrido, NombreCarrera
+        FROM Carrera
+        WHERE NombreCarrera = @nombreCarrera;
+    END
+    ELSE
+    BEGIN
+        -- La carrera no existe, devolver un mensaje indicando que no fue encontrada
+        PRINT 'La carrera con el nombre especificado no fue encontrada.';
+    END
+END;
+
+--Insertar 
+CREATE PROCEDURE InsertarCarrera
+    @costo INT,
+    @modalidad VARCHAR(20),
+    @fechaCarrera DATE,
+    @recorrido VARCHAR(20),
+    @nombreCarrera VARCHAR(20)
+AS
+BEGIN
+    -- Verificar si la carrera ya existe
+    IF NOT EXISTS (SELECT 1 FROM Carrera WHERE NombreCarrera = @nombreCarrera)
+    BEGIN
+        -- Insertar la nueva carrera
+        INSERT INTO Carrera (Costo, Modalidad, FechaCarrera, Recorrido, NombreCarrera)
+        VALUES (@costo, @modalidad, @fechaCarrera, @recorrido, @nombreCarrera);
+        
+        PRINT 'La carrera ha sido insertada correctamente.';
+    END
+    ELSE
+    BEGIN
+        -- La carrera ya existe, devolver un mensaje indicando que no se puede insertar
+        PRINT 'La carrera con el nombre especificado ya existe. No se puede insertar.';
+    END
+END;
+
+--eliminar
+CREATE PROCEDURE EliminarCarrera
+    @nombreCarrera VARCHAR(20)
+AS
+BEGIN
+    -- Verificar si la carrera existe
+    IF EXISTS (SELECT 1 FROM Carrera WHERE NombreCarrera = @nombreCarrera)
+    BEGIN
+        -- Eliminar la carrera
+        DELETE FROM Carrera WHERE NombreCarrera = @nombreCarrera;
+        PRINT 'La carrera ha sido eliminada correctamente.';
+    END
+    ELSE
+    BEGIN
+        -- La carrera no existe, devolver un mensaje indicando que no fue encontrada
+        PRINT 'La carrera con el nombre especificado no fue encontrada. No se realizó ninguna operación de eliminación.';
+    END
+END;
 
 
 
