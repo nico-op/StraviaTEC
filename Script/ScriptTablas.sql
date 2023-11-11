@@ -40,7 +40,7 @@ CREATE TABLE Actividad(
 	ActividadID INT NOT NULL,
 	Usuario VARCHAR(15),
 	PRIMARY KEY(ActividadID),
-	FOREIGN KEY (Usuario) REFERENCES Usuario(Usuario), 
+	FOREIGN KEY (Usuario) REFERENCES Usuario(Usuario) 
 	);
 
 --Reto 
@@ -51,7 +51,7 @@ CREATE TABLE Reto (
 	Altitud VARCHAR(2),
 	Fondo VARCHAR(2),
 	NombreReto VARCHAR(20) NOT NULL,
-	PRIMARY KEY(NombreReto),
+	PRIMARY KEY(NombreReto)
 );
 
 
@@ -62,7 +62,7 @@ CREATE TABLE Carrera(
 	FechaCarrera DATE,
 	Recorrido VARCHAR(20),
 	NombreCarrera VARCHAR(20) NOT NULL,
-	PRIMARY KEY (NombreCarrera),
+	PRIMARY KEY (NombreCarrera)
 );
 
 
@@ -72,7 +72,7 @@ CREATE TABLE Patrocinador(
 	Logo VARCHAR(250),
 	Telefono INT,
 	NombreComercial VARCHAR(20) NOT NULL,
-	PRIMARY KEY(NombreComercial),
+	PRIMARY KEY(NombreComercial)
 
 );
 
@@ -83,7 +83,7 @@ CREATE TABLE Grupo(
 	Administrador VARCHAR(20) NOT NULL,
 	Creacion DATE,
 	GrupoID VARCHAR(20) NOT NULL, 
-	PRIMARY KEY (GrupoID),
+	PRIMARY KEY (GrupoID)
 
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE Comentario(
 	ActividadID INT,
 	ComentarioID INT PRIMARY KEY NOT NULL,
 	FOREIGN KEY (Usuario) REFERENCES Usuario(Usuario),
-	FOREIGN KEY (ActividadID) REFERENCES Actividad(ActividadID),
+	FOREIGN KEY (ActividadID) REFERENCES Actividad(ActividadID)
 );
 
 
@@ -133,7 +133,7 @@ CREATE TABLE UsuariosPorGrupo(
     GrupoID VARCHAR(20),
     PRIMARY KEY (Usuario, GrupoID),
     FOREIGN KEY (Usuario) REFERENCES Usuario(Usuario),
-    FOREIGN KEY (GrupoID) REFERENCES Grupo(GrupoID),
+    FOREIGN KEY (GrupoID) REFERENCES Grupo(GrupoID)
 );
 
 --PatrocinadoresPorReto
@@ -142,7 +142,7 @@ CREATE TABLE PatrocinadoresPorReto(
     NombreComercial VARCHAR(20),
     PRIMARY KEY (NombreReto, NombreComercial),
     FOREIGN KEY (NombreReto) REFERENCES Reto(NombreReto),
-    FOREIGN KEY (NombreComercial) REFERENCES Patrocinador(NombreComercial),
+    FOREIGN KEY (NombreComercial) REFERENCES Patrocinador(NombreComercial)
 );
 
 --PatrocinadoresPorReto
@@ -151,7 +151,7 @@ CREATE TABLE PatrocinadoresPorCarrera(
     NombreComercial VARCHAR(20),
     PRIMARY KEY (NombreCarrera, NombreComercial),
     FOREIGN KEY (NombreCarrera) REFERENCES Carrera(NombreCarrera),
-    FOREIGN KEY (NombreComercial) REFERENCES Patrocinador(NombreComercial),
+    FOREIGN KEY (NombreComercial) REFERENCES Patrocinador(NombreComercial)
 );
 
 --CuentasBancarias 

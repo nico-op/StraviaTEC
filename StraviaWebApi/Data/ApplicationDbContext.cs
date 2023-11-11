@@ -37,8 +37,10 @@ public partial class ApplicationDbContext : DbContext
 
 
     // Cambiar al nombre se su servidor local aquí
+    //DESKTOP-45ERV0H\\SQLEXPRESS04
+    //NICO\\SQLEXPRESS04
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("NICO\\SQLEXPRESS04;Database=StraviaTEC;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-45ERV0H\\SQLEXPRESS04;Database=StraviaTEC;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
