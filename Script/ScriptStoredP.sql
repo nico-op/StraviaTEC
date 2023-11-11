@@ -13,20 +13,25 @@ BEGIN
 END;
 
 --METODO GET
-
 CREATE PROCEDURE ObtenerUsuario
-    @Usuario VARCHAR(15)
+   @NombreUsuario VARCHAR(15)
 AS
 BEGIN
-    BEGIN TRY
-        SELECT *
-        FROM Usuario
-        WHERE Usuario = @Usuario;
-    END TRY
-    BEGIN CATCH
-		RETURN -1;
-    END CATCH;
+   BEGIN TRY
+       IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
+       BEGIN
+           PRINT 'Usuario no encontrado';
+       END
+       ELSE
+       BEGIN
+           SELECT * FROM Usuario WHERE NombreUsuario = @NombreUsuario;
+       END
+   END TRY
+   BEGIN CATCH
+       RETURN -1; -- Puedes ajustar este valor de retorno según tus necesidades.
+   END CATCH;
 END;
+
 
 -- METODO POST
 CREATE PROCEDURE InsertarUsuario
@@ -36,26 +41,44 @@ CREATE PROCEDURE InsertarUsuario
     @FechaNacimiento DATE,
     @Nacionalidad VARCHAR(20),
     @Foto VARCHAR(250),
-    @Usuario VARCHAR(15),
-    @Contraseña VARCHAR(15)
+    @NombreUsuario VARCHAR(15),
+    @Contrasena VARCHAR(15)
 AS
 BEGIN
-    INSERT INTO Usuario (Nombre, Apellido1, Apellido2, Fecha_nacimiento, Nacionalidad, Foto, Usuario, Contraseña)
-    VALUES (@Nombre, @Apellido1, @Apellido2, @FechaNacimiento, @Nacionalidad, @Foto, @Usuario, @Contraseña);
+    -- Validación: Verificar si el usuario ya existe
+    IF EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
+    BEGIN
+        PRINT 'Error: El nombre de usuario ya existe. Elija otro.';
+        RETURN;
+    END
+
+    -- Inserción si el usuario no existe
+    INSERT INTO Usuario (Nombre, Apellido1, Apellido2, Fecha_nacimiento, Nacionalidad, Foto, NombreUsuario, Contrasena)
+    VALUES (@Nombre, @Apellido1, @Apellido2, @FechaNacimiento, @Nacionalidad, @Foto, @NombreUsuario, @Contrasena);
+
+    PRINT 'Usuario insertado exitosamente.';
 END;
 
---METODO PUT
+-- METODO PUT
 CREATE PROCEDURE ActualizarUsuario
-    @Usuario VARCHAR(15),
+    @NombreUsuario VARCHAR(15),
     @Nombre VARCHAR(20),
     @Apellido1 VARCHAR(20),
     @Apellido2 VARCHAR(20),
     @FechaNacimiento DATE,
     @Nacionalidad VARCHAR(20),
     @Foto VARCHAR(250),
-    @Contraseña VARCHAR(15)
+    @Contrasena VARCHAR(15)
 AS
 BEGIN
+    -- Validación: Verificar si el usuario existe antes de la actualización
+    IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
+    BEGIN
+        PRINT 'Error: El usuario no existe. No se puede actualizar.';
+        RETURN; -- Detener la ejecución si el usuario no existe
+    END
+
+    -- Actualización del usuario si existe
     UPDATE Usuario
     SET Nombre = @Nombre,
         Apellido1 = @Apellido1,
@@ -63,66 +86,93 @@ BEGIN
         Fecha_nacimiento = @FechaNacimiento,
         Nacionalidad = @Nacionalidad,
         Foto = @Foto,
-        Contraseña = @Contraseña
-    WHERE Usuario = @Usuario;
+        Contrasena = @Contrasena
+    WHERE NombreUsuario = @NombreUsuario;
+
+    PRINT 'Usuario actualizado exitosamente.';
 END;
 
---METODO DELETE
 
+
+
+-- METODO DELETE
 CREATE PROCEDURE EliminarUsuario
-    @Usuario VARCHAR(15)
+    @NombreUsuario VARCHAR(15)
 AS
 BEGIN
+    -- Validación: Verificar si el usuario existe antes de la eliminación
+    IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
+    BEGIN
+        PRINT 'Error: El usuario no existe. No se puede eliminar.';
+        RETURN; -- Detener la ejecución si el usuario no existe
+    END
+
+    -- Eliminación del usuario si existe
     DELETE FROM Usuario
-    WHERE Usuario = @Usuario;
+    WHERE NombreUsuario = @NombreUsuario;
+
+    PRINT 'Usuario eliminado exitosamente.';
 END;
 
-----------------------------------------------
--- Stored Procedures de Actividad
 
--- Post Actividad
--- Insertar una actividad
+----------------------------------------------
+
+-- Stored Procedure de ACTIVIDAD
+-- METODO POST para Insertar Actividad
 CREATE PROCEDURE InsertarActividad
     @TipoActividad VARCHAR(20),
     @Kilometraje INT,
     @Altitud INT,
     @Ruta VARCHAR(20),
-    @Fecha DATE,
-    @Hora TIME,
-    @Duracion TIME,
-    @Usuario VARCHAR(15)
+    @FechaHora DATE,
+    @Duracion INT,
+    @NombreUsuario VARCHAR(15)
 AS
 BEGIN
-    -- Insertar la nueva actividad
-    INSERT INTO Actividad (TipoActividad, Kilometraje, Altitud, Ruta, Fecha, Hora, Duracion, Usuario)
-    VALUES (@TipoActividad, @Kilometraje, @Altitud, @Ruta, @Fecha, @Hora, @Duracion, @Usuario);
+    -- Validación: Verificar si el usuario existe antes de insertar la actividad
+    IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
+    BEGIN
+        PRINT 'Error: El nombre de usuario no existe. Inserte un usuario válido.';
+        RETURN;
+    END
 
-    -- Devolver un mensaje de éxito
-    PRINT 'Nueva actividad insertada correctamente.';
-END
+    -- Inserción de la actividad si el usuario existe
+    INSERT INTO Actividad (TipoActividad, Kilometraje, Altitud, Ruta, FechaHora, Duracion, NombreUsuario)
+    VALUES (@TipoActividad, @Kilometraje, @Altitud, @Ruta, @FechaHora, @Duracion, @NombreUsuario);
 
---- Get Actividad
+    PRINT 'Actividad insertada exitosamente.';
+END;
+
+
+
 -- Procedimiento almacenado para consultar las actividades de un usuario
 CREATE PROCEDURE ConsultarActividadesPorUsuario
-    @Usuario VARCHAR(15)
+    @NombreUsuario VARCHAR(15)
 AS
 BEGIN
+    -- Validar si el usuario existe
+    IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
+    BEGIN
+        -- Si el usuario no existe, imprimir un mensaje de error
+        PRINT 'Error: El usuario no existe. Proporcione un nombre de usuario válido.';
+        RETURN;
+    END
+
     -- Consulta para seleccionar las actividades de un usuario
-    SELECT TipoActividad, Kilometraje, Altitud, Ruta, Fecha, Hora, Duracion, ActividadID
+    SELECT TipoActividad, Kilometraje, Altitud, Ruta, FechaHora, Duracion, ActividadID
     FROM Actividad
-    WHERE Usuario = @Usuario;
+    WHERE NombreUsuario = @NombreUsuario;
 END
 
--- Delete Actividad
--- Procedimiento almacenado para eliminar una actividad
-CREATE PROCEDURE EliminarActividad
+-- Delete Actividad por ActividadID
+CREATE PROCEDURE EliminarActividadPorID
     @ActividadID INT
 AS
 BEGIN
     -- Verificar si la actividad existe
     IF EXISTS (SELECT 1 FROM Actividad WHERE ActividadID = @ActividadID)
     BEGIN
-        -- Eliminar la actividad
+        -- Eliminar la actividad por ActividadID
         DELETE FROM Actividad WHERE ActividadID = @ActividadID;
         
         -- Devolver un mensaje de éxito
@@ -136,6 +186,7 @@ BEGIN
 END
 
 
+
 -- Put Actividad
 -- Procedimiento almacenado para actualizar una actividad
 CREATE PROCEDURE ActualizarActividad
@@ -144,14 +195,22 @@ CREATE PROCEDURE ActualizarActividad
     @Kilometraje INT,
     @Altitud INT,
     @Ruta VARCHAR(20),
-    @Fecha DATE,
-    @Hora TIME,
-    @Duracion TIME
+    @FechaHora DATETIME,
+    @Duracion INT,
+    @NombreUsuario VARCHAR(15)
 AS
 BEGIN
     -- Verificar si la actividad existe
     IF EXISTS (SELECT 1 FROM Actividad WHERE ActividadID = @ActividadID)
     BEGIN
+        -- Verificar si el usuario existe
+        IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
+        BEGIN
+            -- Si el usuario no existe, imprimir un mensaje de error
+            PRINT 'Error: El usuario no existe. Proporcione un nombre de usuario válido.';
+            RETURN;
+        END
+
         -- Actualizar la actividad
         UPDATE Actividad
         SET
@@ -159,9 +218,9 @@ BEGIN
             Kilometraje = @Kilometraje,
             Altitud = @Altitud,
             Ruta = @Ruta,
-            Fecha = @Fecha,
-            Hora = @Hora,
-            Duracion = @Duracion
+            FechaHora = @FechaHora,
+            Duracion = @Duracion,
+            NombreUsuario = @NombreUsuario
         WHERE ActividadID = @ActividadID;
         
         -- Devolver un mensaje de éxito
@@ -172,7 +231,7 @@ BEGIN
         -- La actividad no existe, devolver un mensaje de error
         PRINT 'La actividad que intentas actualizar no existe.';
     END
-END
+END;
 
 
 
@@ -243,8 +302,4 @@ BEGIN
         PRINT 'La carrera con el nombre especificado no fue encontrada. No se realizó ninguna operación de eliminación.';
     END
 END;
-
-
-
-
 ----------------------------------------------

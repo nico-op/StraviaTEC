@@ -3,13 +3,12 @@ using System.Collections.Generic;
 
 namespace StraviaWebApi.Models;
 
-public partial class Categorium
+public partial class Categoria
 {
-    public string NombreCategoria { get; set; } = null!;
+    public string NombreCategoria { get; set; }
 
     public string DescripcionCategoria { get; set; }
 
-    public string NombreCarrera { get; set; } = null!;
-
+    public string NombreCarrera { get; set; }
 
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
-
 namespace StraviaWebApi.Models;
 
 public partial class Actividad
 {
+    public int ActividadId { get; set; }
+
     public string TipoActividad { get; set; }
 
     public int Kilometraje { get; set; }
@@ -15,14 +15,9 @@ public partial class Actividad
 
     public string Ruta { get; set; }
 
-    public DateTime Fecha { get; set; }
+    public DateTime FechaHora { get; set; }
 
-    public TimeSpan Hora { get; set; }
+    public int Duracion { get; set; }
 
-    public TimeSpan Duracion { get; set; }
-
-    public int ActividadId { get; set; }
-
-    public string Usuario { get; set; }
-
+    public string NombreUsuario { get; set; }
 }

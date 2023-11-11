@@ -15,7 +15,6 @@ public partial class Reto
 
     public string Fondo { get; set; }
 
-    public string NombreReto { get; set; } = null!;
-
+    public string NombreReto { get; set; }
 
 }

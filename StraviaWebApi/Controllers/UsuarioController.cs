@@ -32,28 +32,22 @@ namespace StraviaWebApi
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(string id)
         {
-            // Define el nombre del stored procedure que deseas ejecutar
-            string storedProcedureName = "ObtenerUsuario";
+            var usuario = await _context.Usuarios.FindAsync(id);
 
-            // Ejecuta el stored procedure y obtén los resultados
-            var results = await _context.Set<Usuario>().FromSqlRaw($"EXEC {storedProcedureName} @Usuario = {id}").ToListAsync();
-
-            if (results.Count == 0)
+            if (usuario == null)
             {
                 return NotFound();
             }
 
-            // Devuelve el primer resultado
-            return results.First();
+            return usuario;
         }
-
 
         // PUT: api/Usuario/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario(string id, Usuario usuario)
         {
-            if (id != usuario.Usuario1)
+            if (id != usuario.NombreUsuario)
             {
                 return BadRequest();
             }
@@ -91,7 +85,7 @@ namespace StraviaWebApi
             }
             catch (DbUpdateException)
             {
-                if (UsuarioExists(usuario.Usuario1))
+                if (UsuarioExists(usuario.NombreUsuario))
                 {
                     return Conflict();
                 }
@@ -101,7 +95,7 @@ namespace StraviaWebApi
                 }
             }
 
-            return CreatedAtAction("GetUsuario", new { id = usuario.Usuario1 }, usuario);
+            return CreatedAtAction("GetUsuario", new { id = usuario.NombreUsuario }, usuario);
         }
 
         // DELETE: api/Usuario/5
@@ -122,7 +116,7 @@ namespace StraviaWebApi
 
         private bool UsuarioExists(string id)
         {
-            return _context.Usuarios.Any(e => e.Usuario1 == id);
+            return _context.Usuarios.Any(e => e.NombreUsuario == id);
         }
     }
 }

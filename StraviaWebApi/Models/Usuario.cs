@@ -5,9 +5,9 @@ namespace StraviaWebApi.Models;
 
 public partial class Usuario
 {
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; }
 
-    public string Apellido1 { get; set; } = null!;
+    public string Apellido1 { get; set; }
 
     public string Apellido2 { get; set; }
 
@@ -15,13 +15,14 @@ public partial class Usuario
 
     public DateTime FechaActual { get; set; }
 
-    public string Nacionalidad { get; set; } = null!;
+    public string Nacionalidad { get; set; }
 
     public string Foto { get; set; }
 
-    public string Usuario1 { get; set; } = null!;
+    public string NombreUsuario { get; set; }
 
-    public string Contraseña { get; set; } = null!;
+    public string Contrasena { get; set; }
 
     public int Edad { get; set; }
+
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using StraviaWebApi.Models;
-
-
 namespace StraviaWebApi.Data;
 
 public partial class ApplicationDbContext : DbContext
@@ -21,7 +19,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Carrera> Carreras { get; set; }
 
-    public virtual DbSet<Categorium> Categoria { get; set; }
+    public virtual DbSet<Categoria> Categorias { get; set; }
 
     public virtual DbSet<Comentario> Comentarios { get; set; }
 
@@ -36,9 +34,6 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
 
-    // Cambiar al nombre se su servidor local aquí
-    //DESKTOP-45ERV0H\\SQLEXPRESS04
-    //NICO\\SQLEXPRESS04
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Server=DESKTOP-45ERV0H\\SQLEXPRESS04;Database=StraviaTEC;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;");
 
@@ -46,22 +41,25 @@ public partial class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Actividad>(entity =>
         {
-            entity.HasKey(e => e.ActividadId).HasName("PK__Activida__981483F0B19059E6");
+            entity.HasKey(e => e.ActividadId).HasName("PK__Activida__981483F0B7F35A05");
 
             entity.ToTable("Actividad");
 
             entity.Property(e => e.ActividadId)
                 .ValueGeneratedNever()
                 .HasColumnName("ActividadID");
-            entity.Property(e => e.Fecha).HasColumnType("date");
+            entity.Property(e => e.FechaHora).HasColumnType("date");
+            entity.Property(e => e.NombreUsuario)
+                .IsRequired()
+                .HasMaxLength(15)
+                .IsUnicode(false);
             entity.Property(e => e.Ruta)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.TipoActividad)
+                .IsRequired()
                 .HasMaxLength(20)
-                .IsUnicode(false);
-            entity.Property(e => e.Usuario)
-                .HasMaxLength(15)
                 .IsUnicode(false);
 
 
@@ -69,7 +67,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Carrera>(entity =>
         {
-            entity.HasKey(e => e.NombreCarrera).HasName("PK__Carrera__6D03DD5D50591ADB");
+            entity.HasKey(e => e.NombreCarrera).HasName("PK__Carrera__6D03DD5DF878A922");
 
             entity.ToTable("Carrera");
 
@@ -78,17 +76,19 @@ public partial class ApplicationDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.FechaCarrera).HasColumnType("date");
             entity.Property(e => e.Modalidad)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Recorrido)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
 
         });
 
-        modelBuilder.Entity<Categorium>(entity =>
+        modelBuilder.Entity<Categoria>(entity =>
         {
-            entity.HasKey(e => new { e.NombreCategoria, e.NombreCarrera }).HasName("PK__Categori__64CF834BE677D3E9");
+            entity.HasKey(e => new { e.NombreCategoria, e.NombreCarrera }).HasName("PK__Categori__64CF834BE907263B");
 
             entity.Property(e => e.NombreCategoria)
                 .HasMaxLength(20)
@@ -105,7 +105,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Comentario>(entity =>
         {
-            entity.HasKey(e => e.ComentarioId).HasName("PK__Comentar__F1844958407C7C38");
+            entity.HasKey(e => e.ComentarioId).HasName("PK__Comentar__F184495894AAEB25");
 
             entity.ToTable("Comentario");
 
@@ -114,19 +114,20 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("ComentarioID");
             entity.Property(e => e.ActividadId).HasColumnName("ActividadID");
             entity.Property(e => e.Contenido)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.FechaPublicacion).HasColumnType("date");
-            entity.Property(e => e.Usuario)
+            entity.Property(e => e.NombreUsuario)
                 .HasMaxLength(15)
                 .IsUnicode(false);
 
-
+            
         });
 
         modelBuilder.Entity<CuentasBancaria>(entity =>
         {
-            entity.HasKey(e => new { e.NombreCarrera, e.NumeroCuenta }).HasName("PK__CuentasB__D300485AEBD18B68");
+            entity.HasKey(e => new { e.NombreCarrera, e.NumeroCuenta }).HasName("PK__CuentasB__D300485A9E9A19E7");
 
             entity.Property(e => e.NombreCarrera)
                 .HasMaxLength(20)
@@ -138,11 +139,12 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
+
         });
 
         modelBuilder.Entity<Grupo>(entity =>
         {
-            entity.HasKey(e => e.GrupoId).HasName("PK__Grupo__556BF060BAD88617");
+            entity.HasKey(e => e.GrupoId).HasName("PK__Grupo__556BF060CA8B80FC");
 
             entity.ToTable("Grupo");
 
@@ -151,6 +153,7 @@ public partial class ApplicationDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("GrupoID");
             entity.Property(e => e.Administrador)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Creacion).HasColumnType("date");
@@ -158,13 +161,14 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.NombreGrupo)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
         });
 
         modelBuilder.Entity<Patrocinador>(entity =>
         {
-            entity.HasKey(e => e.NombreComercial).HasName("PK__Patrocin__053E6903E9205FA3");
+            entity.HasKey(e => e.NombreComercial).HasName("PK__Patrocin__053E6903E55AF032");
 
             entity.ToTable("Patrocinador");
 
@@ -175,13 +179,14 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false);
             entity.Property(e => e.NombreLegal)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
         });
 
         modelBuilder.Entity<Reto>(entity =>
         {
-            entity.HasKey(e => e.NombreReto).HasName("PK__Reto__71D830CDE32B58D4");
+            entity.HasKey(e => e.NombreReto).HasName("PK__Reto__71D830CDD67A365E");
 
             entity.ToTable("Reto");
 
@@ -195,38 +200,41 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(2)
                 .IsUnicode(false);
             entity.Property(e => e.Privacidad)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.TipoActividad)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
+
 
         });
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Usuario1).HasName("PK__Usuario__E3237CF6B16CB3D6");
+            entity.HasKey(e => e.NombreUsuario).HasName("PK__Usuario__6B0F5AE15B77F399");
 
             entity.ToTable("Usuario");
 
-            entity.HasIndex(e => e.Contraseña, "UQ__Usuario__A961D9D27FF451BA").IsUnique();
+            entity.HasIndex(e => e.Contrasena, "UQ__Usuario__A96DE151607E09F5").IsUnique();
 
-            entity.Property(e => e.Usuario1)
+            entity.Property(e => e.NombreUsuario)
                 .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("Usuario");
+                .IsUnicode(false);
             entity.Property(e => e.Apellido1)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Apellido2)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.Contraseña)
+            entity.Property(e => e.Contrasena)
+                .IsRequired()
                 .HasMaxLength(15)
                 .IsUnicode(false);
             entity.Property(e => e.Edad).HasComputedColumnSql("(datediff(year,[Fecha_nacimiento],getdate()))", false);
             entity.Property(e => e.FechaActual)
-                .HasComputedColumnSql("(getdate())", false)
                 .HasColumnType("datetime")
                 .HasColumnName("Fecha_actual");
             entity.Property(e => e.FechaNacimiento)
@@ -236,9 +244,11 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false);
             entity.Property(e => e.Nacionalidad)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Nombre)
+                .IsRequired()
                 .HasMaxLength(20)
                 .IsUnicode(false);
         });

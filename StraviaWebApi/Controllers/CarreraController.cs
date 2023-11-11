@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StraviaWebApi.Data;
 using StraviaWebApi.Models;
@@ -30,30 +28,20 @@ namespace StraviaWebApi
             return await _context.Carreras.ToListAsync();
         }
 
+        // GET: api/Carrera/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Carrera>> GetCarrera(string id)
         {
-            try
-            {
-                var carreras = await _context.Carreras
-                    .FromSqlRaw("EXEC ObtenerCarrera @nombreCarrera", 
-                                new SqlParameter("@nombreCarrera", id))
-                    .ToListAsync();
+            var carrera = await _context.Carreras.FindAsync(id);
 
-                if (!carreras.Any())
-                {
-                    return NotFound();
-                }
-
-                var carrera = carreras[0];
-                return carrera;
-            }
-            catch
+            if (carrera == null)
             {
-                // Log the exception, return a generic error message, etc.
-                return StatusCode(500, "An error occurred while processing your request.");
+                return NotFound();
             }
+
+            return carrera;
         }
+
         // PUT: api/Carrera/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
