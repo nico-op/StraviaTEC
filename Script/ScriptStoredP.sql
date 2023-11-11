@@ -28,7 +28,7 @@ BEGIN
        END
    END TRY
    BEGIN CATCH
-       RETURN -1; -- Puedes ajustar este valor de retorno según tus necesidades.
+       RETURN -1; -- Puedes ajustar este valor de retorno segï¿½n tus necesidades.
    END CATCH;
 END;
 
@@ -45,14 +45,14 @@ CREATE PROCEDURE InsertarUsuario
     @Contrasena VARCHAR(15)
 AS
 BEGIN
-    -- Validación: Verificar si el usuario ya existe
+    -- Validaciï¿½n: Verificar si el usuario ya existe
     IF EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
     BEGIN
         PRINT 'Error: El nombre de usuario ya existe. Elija otro.';
         RETURN;
     END
 
-    -- Inserción si el usuario no existe
+    -- Inserciï¿½n si el usuario no existe
     INSERT INTO Usuario (Nombre, Apellido1, Apellido2, Fecha_nacimiento, Nacionalidad, Foto, NombreUsuario, Contrasena)
     VALUES (@Nombre, @Apellido1, @Apellido2, @FechaNacimiento, @Nacionalidad, @Foto, @NombreUsuario, @Contrasena);
 
@@ -71,14 +71,14 @@ CREATE PROCEDURE ActualizarUsuario
     @Contrasena VARCHAR(15)
 AS
 BEGIN
-    -- Validación: Verificar si el usuario existe antes de la actualización
+    -- Validaciï¿½n: Verificar si el usuario existe antes de la actualizaciï¿½n
     IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
     BEGIN
         PRINT 'Error: El usuario no existe. No se puede actualizar.';
-        RETURN; -- Detener la ejecución si el usuario no existe
+        RETURN; -- Detener la ejecuciï¿½n si el usuario no existe
     END
 
-    -- Actualización del usuario si existe
+    -- Actualizaciï¿½n del usuario si existe
     UPDATE Usuario
     SET Nombre = @Nombre,
         Apellido1 = @Apellido1,
@@ -100,14 +100,14 @@ CREATE PROCEDURE EliminarUsuario
     @NombreUsuario VARCHAR(15)
 AS
 BEGIN
-    -- Validación: Verificar si el usuario existe antes de la eliminación
+    -- Validaciï¿½n: Verificar si el usuario existe antes de la eliminaciï¿½n
     IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
     BEGIN
         PRINT 'Error: El usuario no existe. No se puede eliminar.';
-        RETURN; -- Detener la ejecución si el usuario no existe
+        RETURN; -- Detener la ejecuciï¿½n si el usuario no existe
     END
 
-    -- Eliminación del usuario si existe
+    -- Eliminaciï¿½n del usuario si existe
     DELETE FROM Usuario
     WHERE NombreUsuario = @NombreUsuario;
 
@@ -129,14 +129,14 @@ CREATE PROCEDURE InsertarActividad
     @NombreUsuario VARCHAR(15)
 AS
 BEGIN
-    -- Validación: Verificar si el usuario existe antes de insertar la actividad
+    -- Validaciï¿½n: Verificar si el usuario existe antes de insertar la actividad
     IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
     BEGIN
-        PRINT 'Error: El nombre de usuario no existe. Inserte un usuario válido.';
+        PRINT 'Error: El nombre de usuario no existe. Inserte un usuario vï¿½lido.';
         RETURN;
     END
 
-    -- Inserción de la actividad si el usuario existe
+    -- Inserciï¿½n de la actividad si el usuario existe
     INSERT INTO Actividad (TipoActividad, Kilometraje, Altitud, Ruta, FechaHora, Duracion, NombreUsuario)
     VALUES (@TipoActividad, @Kilometraje, @Altitud, @Ruta, @FechaHora, @Duracion, @NombreUsuario);
 
@@ -154,7 +154,7 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
     BEGIN
         -- Si el usuario no existe, imprimir un mensaje de error
-        PRINT 'Error: El usuario no existe. Proporcione un nombre de usuario válido.';
+        PRINT 'Error: El usuario no existe. Proporcione un nombre de usuario vï¿½lido.';
         RETURN;
     END
 
@@ -175,7 +175,7 @@ BEGIN
         -- Eliminar la actividad por ActividadID
         DELETE FROM Actividad WHERE ActividadID = @ActividadID;
         
-        -- Devolver un mensaje de éxito
+        -- Devolver un mensaje de ï¿½xito
         PRINT 'La actividad ha sido eliminada correctamente.';
     END
     ELSE
@@ -207,7 +207,7 @@ BEGIN
         IF NOT EXISTS (SELECT 1 FROM Usuario WHERE NombreUsuario = @NombreUsuario)
         BEGIN
             -- Si el usuario no existe, imprimir un mensaje de error
-            PRINT 'Error: El usuario no existe. Proporcione un nombre de usuario válido.';
+            PRINT 'Error: El usuario no existe. Proporcione un nombre de usuario vï¿½lido.';
             RETURN;
         END
 
@@ -223,7 +223,7 @@ BEGIN
             NombreUsuario = @NombreUsuario
         WHERE ActividadID = @ActividadID;
         
-        -- Devolver un mensaje de éxito
+        -- Devolver un mensaje de ï¿½xito
         PRINT 'La actividad ha sido actualizada correctamente.';
     END
     ELSE
@@ -247,7 +247,7 @@ BEGIN
     -- Verificar si la carrera existe
     IF EXISTS (SELECT 1 FROM Carrera WHERE NombreCarrera = @nombreCarrera)
     BEGIN
-        -- La carrera existe, obtener la información de la carrera
+        -- La carrera existe, obtener la informaciï¿½n de la carrera
         SELECT Costo, Modalidad, FechaCarrera, Recorrido, NombreCarrera
         FROM Carrera
         WHERE NombreCarrera = @nombreCarrera;
@@ -299,7 +299,9 @@ BEGIN
     ELSE
     BEGIN
         -- La carrera no existe, devolver un mensaje indicando que no fue encontrada
-        PRINT 'La carrera con el nombre especificado no fue encontrada. No se realizó ninguna operación de eliminación.';
+        PRINT 'La carrera con el nombre especificado no fue encontrada. No se realizï¿½ ninguna operaciï¿½n de eliminaciï¿½n.';
     END
 END;
 ----------------------------------------------
+
+
