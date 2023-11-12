@@ -463,12 +463,84 @@ BEGIN
             @ErrorMessage = ERROR_MESSAGE(),
             @ErrorSeverity = ERROR_SEVERITY(),
             @ErrorState = ERROR_STATE();
-
-        RAISEERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH;
 END;
+GO
 
 
+---------------------- Amigo --------------------------
+CREATE PROCEDURE CrudAmigo
+    @Operacion VARCHAR(10),
+    @UsuarioOrigen VARCHAR(15) = NULL,
+    @UsuarioDestino VARCHAR(15) = NULL
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @Operacion = 'SELECT'
+        BEGIN
+            SELECT 
+                UsuarioOrigen, 
+                UsuarioDestino
+            FROM Amigo;
+        END
+        ELSE IF @Operacion = 'SELECT ONE'
+        BEGIN
+            SELECT 
+                UsuarioOrigen, 
+                UsuarioDestino
+            FROM Amigo
+            WHERE UsuarioOrigen = @UsuarioOrigen AND UsuarioDestino = @UsuarioDestino;
+        END
+		ELSE IF @Operacion = 'SELECT BY USER'
+        BEGIN
+            SELECT 
+                UsuarioOrigen, 
+                UsuarioDestino
+            FROM Amigo
+            WHERE UsuarioOrigen = @UsuarioOrigen;
+        END
+        ELSE IF @Operacion = 'INSERT'
+        BEGIN
+            INSERT INTO Amigo (
+                UsuarioOrigen, 
+                UsuarioDestino
+            ) VALUES (
+                @UsuarioOrigen, 
+                @UsuarioDestino
+            );
+            PRINT 'Amistad registrada exitosamente.';
+        END
+        ELSE IF @Operacion = 'DELETE'
+        BEGIN
+            DELETE FROM Amigo
+            WHERE UsuarioOrigen = @UsuarioOrigen AND UsuarioDestino = @UsuarioDestino;
+            PRINT 'Amistad eliminada exitosamente.';
+        END
+        ELSE
+        BEGIN
+            -- Operación no válida
+            ROLLBACK;
+            PRINT 'Error: Operación no válida.';
+            RETURN;
+        END
+
+        COMMIT; -- Confirmar la transacción
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+    END CATCH;
+END;
+GO
 
 
 
