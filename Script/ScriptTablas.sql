@@ -83,9 +83,12 @@ CREATE TABLE Grupo(
 	Administrador VARCHAR(20) NOT NULL,
 	Creacion DATE,
 	GrupoID VARCHAR(20) NOT NULL, 
-	PRIMARY KEY (GrupoID)
-
+	PRIMARY KEY (GrupoID),
+	UNIQUE(NombreGrupo)
 );
+
+
+
 
 --Comentario 
 CREATE TABLE Comentario(
@@ -135,6 +138,7 @@ CREATE TABLE UsuariosPorGrupo(
     FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario),
     FOREIGN KEY (GrupoID) REFERENCES Grupo(GrupoID)
 );
+
 
 --PatrocinadoresPorReto
 CREATE TABLE PatrocinadoresPorReto(

@@ -291,6 +291,7 @@ BEGIN
             @ErrorState = ERROR_STATE();
     END CATCH;
 END;
+GO
 
 
 
@@ -374,7 +375,99 @@ END;
 GO
 
 
--- GRUPO --
+-------------------------------------- GRUPO -------------------------------------------
+CREATE PROCEDURE CrudGrupo
+    @Operacion VARCHAR(10),
+    @NombreGrupo VARCHAR(20) = NULL,
+    @Descripcion VARCHAR(50) = NULL,
+    @Administrador VARCHAR(20) = NULL,
+    @Creacion DATE = NULL,
+    @GrupoID VARCHAR(20) = NULL
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @Operacion = 'SELECT'
+        BEGIN
+            SELECT 
+                NombreGrupo, 
+                Descripcion, 
+                Administrador, 
+                Creacion, 
+                GrupoID
+            FROM Grupo;
+        END
+        ELSE IF @Operacion = 'SELECT ONE'
+        BEGIN
+            SELECT 
+                NombreGrupo, 
+                Descripcion, 
+                Administrador, 
+                Creacion, 
+                GrupoID
+            FROM Grupo
+            WHERE GrupoID = @GrupoID;
+        END
+        ELSE IF @Operacion = 'INSERT'
+        BEGIN
+            INSERT INTO Grupo (
+                NombreGrupo, 
+                Descripcion, 
+                Administrador, 
+                Creacion, 
+                GrupoID
+            ) VALUES (
+                @NombreGrupo, 
+                @Descripcion, 
+                @Administrador, 
+                @Creacion, 
+                @GrupoID
+            );
+            PRINT 'Grupo registrado exitosamente.';
+        END
+        ELSE IF @Operacion = 'UPDATE'
+        BEGIN
+            UPDATE Grupo
+            SET 
+                NombreGrupo = @NombreGrupo, 
+                Descripcion = @Descripcion, 
+                Administrador = @Administrador, 
+                Creacion = @Creacion
+            WHERE GrupoID = @GrupoID;
+            PRINT 'Grupo actualizado exitosamente.';
+        END
+        ELSE IF @Operacion = 'DELETE'
+        BEGIN
+            DELETE FROM Grupo
+            WHERE GrupoID = @GrupoID;
+            PRINT 'Grupo eliminado exitosamente.';
+        END
+        ELSE
+        BEGIN
+            -- Operación no válida
+            ROLLBACK;
+            PRINT 'Error: Operación no válida.';
+            RETURN;
+        END
+
+        COMMIT; -- Confirmar la transacción
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+
+        RAISEERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH;
+END;
+
 
 
 
