@@ -1,7 +1,7 @@
 
 
 -- Stored Procedures
--- USUARIO --
+----------------------- USUARIO ---------------------------------------------------------
 -- Stored Procedure CRUD para la tabla Usuario
 CREATE PROCEDURE CrudUsuario
     @Operacion VARCHAR(10),
@@ -123,7 +123,7 @@ GO
 
 
 
--- ACTIVIDAD --
+------------------------------- ACTIVIDAD -----------------------------------------
 -- CRUD para la tabla Actividad
 CREATE PROCEDURE CrudActividad
     @Operacion VARCHAR(10),
@@ -201,9 +201,100 @@ END;
 GO
 
 
--- CARRERA --
+---------------------------- CARRERA -------------------------
+CREATE PROCEDURE CrudCarrera
+    @Operacion VARCHAR(10),
+    @Costo INT = NULL,
+    @Modalidad VARCHAR(20) = NULL,
+    @FechaCarrera DATE = NULL,
+    @Recorrido VARCHAR(20) = NULL,
+    @NombreCarrera VARCHAR(20) = NULL
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
--- RETO --
+        IF @Operacion = 'SELECT'
+        BEGIN
+            SELECT 
+                Costo, 
+                Modalidad, 
+                FechaCarrera, 
+                Recorrido, 
+                NombreCarrera
+            FROM Carrera;
+        END
+        ELSE IF @Operacion = 'SELECT ONE'
+        BEGIN
+            SELECT 
+                Costo, 
+                Modalidad, 
+                FechaCarrera, 
+                Recorrido, 
+                NombreCarrera
+            FROM Carrera
+            WHERE NombreCarrera = @NombreCarrera;
+        END
+        ELSE IF @Operacion = 'INSERT'
+        BEGIN
+            INSERT INTO Carrera (
+                Costo, 
+                Modalidad, 
+                FechaCarrera, 
+                Recorrido, 
+                NombreCarrera
+            ) VALUES (
+                @Costo, 
+                @Modalidad, 
+                @FechaCarrera, 
+                @Recorrido, 
+                @NombreCarrera
+            );
+            PRINT 'Carrera registrada exitosamente.';
+        END
+        ELSE IF @Operacion = 'UPDATE'
+        BEGIN
+            UPDATE Carrera
+            SET 
+                Costo = @Costo, 
+                Modalidad = @Modalidad, 
+                FechaCarrera = @FechaCarrera, 
+                Recorrido = @Recorrido
+            WHERE NombreCarrera = @NombreCarrera;
+            PRINT 'Carrera actualizada exitosamente.';
+        END
+        ELSE IF @Operacion = 'DELETE'
+        BEGIN
+            DELETE FROM Carrera
+            WHERE NombreCarrera = @NombreCarrera;
+            PRINT 'Carrera eliminada exitosamente.';
+        END
+        ELSE
+        BEGIN
+            -- Operación no válida
+            ROLLBACK;
+            PRINT 'Error: Operación no válida.';
+            RETURN;
+        END
+
+        COMMIT; -- Confirmar la transacción
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+    END CATCH;
+END;
+
+
+
+--------------------------- RETO --------------------------
 CREATE PROCEDURE CrudReto
     @Operacion VARCHAR(10),
     @NombreReto VARCHAR(20) = NULL , -- Hacer que @NombreReto sea opcional
