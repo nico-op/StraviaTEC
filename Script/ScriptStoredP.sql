@@ -542,7 +542,7 @@ BEGIN
 END;
 GO
 ------------------ CATEGORIA -------------------------------------
-CREATE PROCEDURE CrudCategoria
+alter PROCEDURE CrudCategoria
     @Operacion VARCHAR(10),
     @NombreCategoria VARCHAR(20) = NULL,
     @DescripcionCategoria VARCHAR(100) = NULL,
@@ -596,7 +596,7 @@ BEGIN
                 DescripcionCategoria, 
                 NombreCarrera
             FROM Categoria
-            WHERE NombreCategoria = @NombreCategoria AND NombreCarrera = @NombreCarrera;
+            WHERE NombreCarrera = @NombreCarrera;
         END
         ELSE
         BEGIN
@@ -618,11 +618,9 @@ BEGIN
             @ErrorMessage = ERROR_MESSAGE(),
             @ErrorSeverity = ERROR_SEVERITY(),
             @ErrorState = ERROR_STATE();
-
-        RAISEERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH;
 END;
-
+GO
 
 
 

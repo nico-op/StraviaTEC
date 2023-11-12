@@ -49,8 +49,8 @@ namespace StraviaTEC.Controllers
             }
         }
 
-        [HttpGet("{nombreCategoria}/{nombreCarrera}")]
-        public IActionResult GetCategoria(string nombreCategoria, string nombreCarrera)
+        [HttpGet("{nombreCarrera}")]
+        public IActionResult GetCategoria(string nombreCarrera)
         {
             Categoria categoria = null;
 
@@ -63,7 +63,6 @@ namespace StraviaTEC.Controllers
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@Operacion", "SELECT ONE");
-                        command.Parameters.AddWithValue("@NombreCategoria", nombreCategoria);
                         command.Parameters.AddWithValue("@NombreCarrera", nombreCarrera);
 
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -74,7 +73,6 @@ namespace StraviaTEC.Controllers
                                 {
                                     NombreCategoria = reader["NombreCategoria"].ToString(),
                                     DescripcionCategoria = reader["DescripcionCategoria"].ToString(),
-                                    
                                 };
                             }
                         }
