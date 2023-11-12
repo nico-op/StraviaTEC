@@ -21,5 +21,7 @@ namespace StraviaWebApi
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
+        
+
     }
 }

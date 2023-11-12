@@ -1,10 +1,127 @@
 
 
 -- Stored Procedures
--- Los stored procedures deben englobar varias operaciones
-
-
 -- USUARIO --
+-- Stored Procedure CRUD para la tabla Usuario
+CREATE PROCEDURE CrudUsuario
+    @Operacion VARCHAR(10),
+    @Nombre VARCHAR(20) = NULL,
+    @Apellido1 VARCHAR(20) = NULL,
+    @Apellido2 VARCHAR(20) = NULL,
+    @Fecha_nacimiento DATE = NULL,
+    @Fecha_actual DATETIME = NULL,
+    @Nacionalidad VARCHAR(20) = NULL,
+    @Foto VARCHAR(250) = NULL,
+    @NombreUsuario VARCHAR(15) = NULL,
+    @Contrasena VARCHAR(15) = NULL
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @Operacion = 'SELECT'
+        BEGIN
+            SELECT 
+                Nombre, 
+                Apellido1, 
+                Apellido2, 
+                Fecha_nacimiento, 
+                Fecha_actual, 
+                Nacionalidad, 
+                Foto, 
+                NombreUsuario, 
+                Contrasena, 
+                Edad 
+            FROM Usuario;
+        END
+        ELSE IF @Operacion = 'SELECT ONE'
+        BEGIN
+            SELECT 
+                Nombre, 
+                Apellido1, 
+                Apellido2, 
+                Fecha_nacimiento, 
+                Fecha_actual, 
+                Nacionalidad, 
+                Foto, 
+                NombreUsuario, 
+                Contrasena, 
+                Edad 
+            FROM Usuario
+            WHERE NombreUsuario = @NombreUsuario;
+        END
+        ELSE IF @Operacion = 'INSERT'
+        BEGIN
+            INSERT INTO Usuario (
+                Nombre, 
+                Apellido1, 
+                Apellido2, 
+                Fecha_nacimiento, 
+                Fecha_actual, 
+                Nacionalidad, 
+                Foto, 
+                NombreUsuario, 
+                Contrasena
+            ) VALUES (
+                @Nombre, 
+                @Apellido1, 
+                @Apellido2, 
+                @Fecha_nacimiento, 
+                @Fecha_actual, 
+                @Nacionalidad, 
+                @Foto, 
+                @NombreUsuario, 
+                @Contrasena
+            );
+            PRINT 'Usuario registrado exitosamente.';
+        END
+        ELSE IF @Operacion = 'UPDATE'
+        BEGIN
+            UPDATE Usuario
+            SET 
+                Nombre = @Nombre, 
+                Apellido1 = @Apellido1, 
+                Apellido2 = @Apellido2, 
+                Fecha_nacimiento = @Fecha_nacimiento, 
+                Fecha_actual = @Fecha_actual, 
+                Nacionalidad = @Nacionalidad, 
+                Foto = @Foto,
+                Contrasena = @Contrasena
+            WHERE NombreUsuario = @NombreUsuario;
+            PRINT 'Usuario actualizado exitosamente.';
+        END
+        ELSE IF @Operacion = 'DELETE'
+        BEGIN
+            DELETE FROM Usuario
+            WHERE NombreUsuario = @NombreUsuario;
+            PRINT 'Usuario eliminado exitosamente.';
+        END
+        ELSE
+        BEGIN
+            -- Operación no válida
+            ROLLBACK;
+            PRINT 'Error: Operación no válida.';
+            RETURN;
+        END
+
+        COMMIT; -- Confirmar la transacción
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+    END CATCH;
+END;
+GO
+
+
+
 
 -- ACTIVIDAD --
 -- CRUD para la tabla Actividad
