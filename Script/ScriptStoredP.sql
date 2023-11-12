@@ -541,7 +541,87 @@ BEGIN
     END CATCH;
 END;
 GO
+------------------ CATEGORIA -------------------------------------
+CREATE PROCEDURE CrudCategoria
+    @Operacion VARCHAR(10),
+    @NombreCategoria VARCHAR(20) = NULL,
+    @DescripcionCategoria VARCHAR(100) = NULL,
+    @NombreCarrera VARCHAR(20) = NULL,
+    @NombreUsuario VARCHAR(15) = NULL
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
+        IF @Operacion = 'INSERT'
+        BEGIN
+            DECLARE @Edad INT;
+            DECLARE @CategoriaEdad VARCHAR(20);
+
+            -- Obtener la edad del Usuario
+            SELECT @Edad = DATEDIFF(YEAR, Fecha_nacimiento, GETDATE())
+            FROM Usuario
+            WHERE NombreUsuario = @NombreUsuario;
+
+            -- Lógica para determinar la categoría en base a la edad
+            IF @Edad < 15
+                SET @CategoriaEdad = 'Junior';
+            ELSE IF @Edad >= 15 AND @Edad <= 23
+                SET @CategoriaEdad = 'Sub-23';
+            ELSE IF @Edad >= 24 AND @Edad <= 30
+                SET @CategoriaEdad = 'Open';
+            ELSE IF @Edad > 30 AND @Edad <= 40
+                SET @CategoriaEdad = 'Master A';
+            ELSE IF @Edad > 40 AND @Edad <= 50
+                SET @CategoriaEdad = 'Master B';
+            ELSE
+                SET @CategoriaEdad = 'Master C';
+
+            -- Insertar en la tabla Categoria
+            INSERT INTO Categoria (
+                NombreCategoria, 
+                DescripcionCategoria, 
+                NombreCarrera
+            ) VALUES (
+                @CategoriaEdad, -- Utilizar la categoría calculada
+                @DescripcionCategoria, 
+                @NombreCarrera
+            );
+            PRINT 'Categoría registrada exitosamente.';
+        END
+        ELSE IF @Operacion = 'SELECT ONE'
+        BEGIN
+            SELECT 
+                NombreCategoria, 
+                DescripcionCategoria, 
+                NombreCarrera
+            FROM Categoria
+            WHERE NombreCategoria = @NombreCategoria AND NombreCarrera = @NombreCarrera;
+        END
+        ELSE
+        BEGIN
+            -- Operación no válida
+            ROLLBACK;
+            PRINT 'Error: Operación no válida.';
+            RETURN;
+        END
+
+        COMMIT; -- Confirmar la transacción
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+
+        RAISEERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH;
+END;
 
 
 

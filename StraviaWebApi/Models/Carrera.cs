@@ -14,4 +14,5 @@ public partial class Carrera
     public string Recorrido { get; set; }
 
     public string NombreCarrera { get; set; }
+
 }
