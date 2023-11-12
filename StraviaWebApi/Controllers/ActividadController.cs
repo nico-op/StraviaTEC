@@ -81,5 +81,52 @@ namespace StraviaTEC.Controllers
                 return CreatedAtAction(nameof(GetByUser), new { usuario = actividad.NombreUsuario }, actividad);
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Actividad actividad)
+        {
+            if (id != actividad.ActividadId)
+            {
+                return BadRequest();
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("ActualizarActividad", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@ActividadID", id);
+                command.Parameters.AddWithValue("@TipoActividad", actividad.TipoActividad);
+                command.Parameters.AddWithValue("@Kilometraje", actividad.Kilometraje);
+                command.Parameters.AddWithValue("@Altitud", actividad.Altitud);
+                command.Parameters.AddWithValue("@Ruta", actividad.Ruta);
+                command.Parameters.AddWithValue("@FechaHora", actividad.FechaHora);
+                command.Parameters.AddWithValue("@Duracion", actividad.Duracion);
+                command.Parameters.AddWithValue("@NombreUsuario", actividad.NombreUsuario);
+
+                command.ExecuteNonQuery();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("EliminarActividadPorID", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@ActividadID", id);
+
+                command.ExecuteNonQuery();
+            }
+
+            return NoContent();
+        }
+
     }
 }
