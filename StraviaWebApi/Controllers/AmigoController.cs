@@ -60,6 +60,47 @@ namespace StraviaTEC.Controllers
             }
         }
 
+        [HttpGet("{usuarioOrigen}")]
+        public IActionResult GetAmigosByUser(string usuarioOrigen)
+        {
+            List<Amigo> amigos = new List<Amigo>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("CrudAmigo", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Operacion", "SELECT BY USER");
+                        command.Parameters.AddWithValue("@UsuarioOrigen", usuarioOrigen);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Amigo amigo = new Amigo
+                                {
+                                    UsuarioOrigen = reader["UsuarioOrigen"].ToString(),
+                                    UsuarioDestino = reader["UsuarioDestino"].ToString()
+                                };
+
+                                amigos.Add(amigo);
+                            }
+                        }
+                    }
+                }
+
+                return Ok(amigos);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception message or return it in a BadRequest
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{usuarioOrigen}/{usuarioDestino}")]
         public IActionResult GetAmigo(string usuarioOrigen, string usuarioDestino)
         {
