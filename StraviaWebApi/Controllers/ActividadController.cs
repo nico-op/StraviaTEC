@@ -18,118 +18,110 @@ namespace StraviaTEC.Controllers
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-        
 
-        [HttpGet("{usuario}")]
-        public ActionResult<List<Actividad>> GetByUser(string usuario)
+
+        [HttpGet]
+        public IActionResult GetActividades()
         {
+            List<Actividad> actividades = new List<Actividad>();
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand("ConsultarActividadesPorUsuario", connection);
+                SqlCommand command = new SqlCommand("CrudActividad", connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@NombreUsuario", usuario));
+                command.Parameters.AddWithValue("@Operacion", "SELECT");
 
                 connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
 
-                List<Actividad> actividades = new List<Actividad>();
-                while (reader.Read())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    Actividad actividad = new Actividad
+                    while (reader.Read())
                     {
-                        ActividadId = (int)reader["ActividadID"],
-                        TipoActividad = reader["TipoActividad"].ToString(),
-                        Kilometraje = (int)reader["Kilometraje"],
-                        Altitud = (int)reader["Altitud"],
-                        Ruta = reader["Ruta"].ToString(),
-                        FechaHora = (DateTime)reader["FechaHora"],
-                        Duracion = (int)reader["Duracion"],
-                        NombreUsuario = usuario
-                    };
+                        Actividad actividad = new Actividad
+                        {
+                            ActividadId = Convert.ToInt32(reader["ActividadId"]),
+                            TipoActividad = reader["TipoActividad"].ToString(),
+                            Kilometraje = Convert.ToInt32(reader["Kilometraje"]),
+                            Altitud = Convert.ToInt32(reader["Altitud"]),
+                            Ruta = reader["Ruta"].ToString(),
+                            FechaHora = Convert.ToDateTime(reader["FechaHora"]),
+                            Duracion = Convert.ToInt32(reader["Duracion"]),
+                            NombreUsuario = reader["NombreUsuario"].ToString()
+                        };
 
-                    actividades.Add(actividad);
-                }
-
-                reader.Close();
-
-                if (actividades.Count > 0)
-                {
-                    return actividades;
-                }
-                else
-                {
-                    return NotFound();
+                        actividades.Add(actividad);
+                    }
                 }
             }
+            return Ok(actividades);
         }
 
+
         [HttpPost]
-        public ActionResult<Actividad> Create(Actividad actividad)
+        public IActionResult CreateActividad([FromBody] Actividad newActividad)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                SqlCommand command = new SqlCommand("CrudActividad", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Operacion", "INSERT");
+                command.Parameters.AddWithValue("@TipoActividad", newActividad.TipoActividad);
+                command.Parameters.AddWithValue("@Kilometraje", newActividad.Kilometraje);
+                command.Parameters.AddWithValue("@Altitud", newActividad.Altitud);
+                command.Parameters.AddWithValue("@Ruta", newActividad.Ruta);
+                command.Parameters.AddWithValue("@FechaHora", newActividad.FechaHora);
+                command.Parameters.AddWithValue("@Duracion", newActividad.Duracion);
+                command.Parameters.AddWithValue("@NombreUsuario", newActividad.NombreUsuario);
+
                 connection.Open();
 
-                SqlCommand command = new SqlCommand("InsertarActividad", connection);
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@TipoActividad", actividad.TipoActividad);
-                command.Parameters.AddWithValue("@Kilometraje", actividad.Kilometraje);
-                command.Parameters.AddWithValue("@Altitud", actividad.Altitud);
-                command.Parameters.AddWithValue("@Ruta", actividad.Ruta);
-                command.Parameters.AddWithValue("@FechaHora", actividad.FechaHora);
-                command.Parameters.AddWithValue("@Duracion", actividad.Duracion);
-                command.Parameters.AddWithValue("@NombreUsuario", actividad.NombreUsuario);
-
                 command.ExecuteNonQuery();
-
-                return CreatedAtAction(nameof(GetByUser), new { usuario = actividad.NombreUsuario }, actividad);
             }
+
+            return Ok(newActividad);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Actividad actividad)
+        public IActionResult UpdateActividad(int id, [FromBody] Actividad updatedActividad)
         {
-            if (id != actividad.ActividadId)
-            {
-                return BadRequest();
-            }
-
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                connection.Open();
-
-                SqlCommand command = new SqlCommand("ActualizarActividad", connection);
+                SqlCommand command = new SqlCommand("CrudActividad", connection);
                 command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Operacion", "UPDATE");
                 command.Parameters.AddWithValue("@ActividadID", id);
-                command.Parameters.AddWithValue("@TipoActividad", actividad.TipoActividad);
-                command.Parameters.AddWithValue("@Kilometraje", actividad.Kilometraje);
-                command.Parameters.AddWithValue("@Altitud", actividad.Altitud);
-                command.Parameters.AddWithValue("@Ruta", actividad.Ruta);
-                command.Parameters.AddWithValue("@FechaHora", actividad.FechaHora);
-                command.Parameters.AddWithValue("@Duracion", actividad.Duracion);
-                command.Parameters.AddWithValue("@NombreUsuario", actividad.NombreUsuario);
+                command.Parameters.AddWithValue("@TipoActividad", updatedActividad.TipoActividad);
+                command.Parameters.AddWithValue("@Kilometraje", updatedActividad.Kilometraje);
+                command.Parameters.AddWithValue("@Altitud", updatedActividad.Altitud);
+                command.Parameters.AddWithValue("@Ruta", updatedActividad.Ruta);
+                command.Parameters.AddWithValue("@FechaHora", updatedActividad.FechaHora);
+                command.Parameters.AddWithValue("@Duracion", updatedActividad.Duracion);
+                command.Parameters.AddWithValue("@NombreUsuario", updatedActividad.NombreUsuario);
+
+                connection.Open();
 
                 command.ExecuteNonQuery();
             }
 
-            return NoContent();
+            return Ok(updatedActividad);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteActividad(int id)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                connection.Open();
-
-                SqlCommand command = new SqlCommand("EliminarActividadPorID", connection);
+                SqlCommand command = new SqlCommand("CrudActividad", connection);
                 command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Operacion", "DELETE");
                 command.Parameters.AddWithValue("@ActividadID", id);
+
+                connection.Open();
 
                 command.ExecuteNonQuery();
             }
 
-            return NoContent();
+            return Ok();
         }
 
     }

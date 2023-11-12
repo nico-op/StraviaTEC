@@ -7,16 +7,92 @@
 -- USUARIO --
 
 -- ACTIVIDAD --
+-- CRUD para la tabla Actividad
+CREATE PROCEDURE CrudActividad
+    @Operacion VARCHAR(10),
+    @ActividadID INT = NULL,
+    @TipoActividad VARCHAR(20) = NULL,
+    @Kilometraje INT = NULL,
+    @Altitud INT = NULL,
+    @Ruta VARCHAR(20) = NULL,
+    @FechaHora DATETIME = NULL,
+    @Duracion INT = NULL,
+    @NombreUsuario VARCHAR(15) = NULL
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    IF @Operacion = 'INSERT'
+    BEGIN
+        -- Insertar nueva actividad
+        INSERT INTO Actividad (TipoActividad, Kilometraje, Altitud, Ruta, FechaHora, Duracion, NombreUsuario)
+        VALUES (@TipoActividad, @Kilometraje, @Altitud, @Ruta, @FechaHora, @Duracion, @NombreUsuario);
+        
+        PRINT 'Actividad insertada exitosamente.';
+    END
+    ELSE IF @Operacion = 'SELECT ONE'
+    BEGIN
+        -- Seleccionar una actividad por ID
+        SELECT * FROM Actividad WHERE ActividadID = @ActividadID;
+    END
+    ELSE IF @Operacion = 'SELECT'
+    BEGIN
+        -- Seleccionar todas las actividades
+        SELECT * FROM Actividad;
+    END
+    ELSE IF @Operacion = 'UPDATE'
+    BEGIN
+        -- Verificar si la actividad existe antes de actualizar
+        IF NOT EXISTS (SELECT 1 FROM Actividad WHERE ActividadID = @ActividadID)
+        BEGIN
+            ROLLBACK;
+            PRINT 'Error: La actividad que intentas actualizar no existe.';
+            RETURN;
+        END
+
+        -- Actualizar la actividad
+        UPDATE Actividad
+        SET
+            TipoActividad = COALESCE(@TipoActividad, TipoActividad),
+            Kilometraje = COALESCE(@Kilometraje, Kilometraje),
+            Altitud = COALESCE(@Altitud, Altitud),
+            Ruta = COALESCE(@Ruta, Ruta),
+            FechaHora = COALESCE(@FechaHora, FechaHora),
+            Duracion = COALESCE(@Duracion, Duracion),
+            NombreUsuario = COALESCE(@NombreUsuario, NombreUsuario)
+        WHERE ActividadID = @ActividadID;
+        
+        PRINT 'Actividad actualizada exitosamente.';
+    END
+    ELSE IF @Operacion = 'DELETE'
+    BEGIN
+        -- Eliminar la actividad
+        DELETE FROM Actividad WHERE ActividadID = @ActividadID;
+        
+        PRINT 'Actividad eliminada exitosamente.';
+    END
+    ELSE
+    BEGIN
+        -- Operación no válida
+        ROLLBACK;
+        PRINT 'Error: Operación no válida.';
+        RETURN;
+    END
+
+    COMMIT; -- Confirmar la transacción
+END;
+GO
+
 
 -- CARRERA --
 
 -- RETO --
-ALTER PROCEDURE CrudReto
-    @Operacion VARCHAR(10) = '',
-    @NombreReto VARCHAR(20) , -- Hacer que @NombreReto sea opcional
-    @Privacidad VARCHAR(20) , -- Hacer que @Privacidad sea opcional
-    @Periodo INT , -- Hacer que @Periodo sea opcional
-    @TipoActividad VARCHAR(20) , -- Hacer que @TipoActividad sea opcional
+CREATE PROCEDURE CrudReto
+    @Operacion VARCHAR(10),
+    @NombreReto VARCHAR(20) = NULL , -- Hacer que @NombreReto sea opcional
+    @Privacidad VARCHAR(20) = NULL, -- Hacer que @Privacidad sea opcional
+    @Periodo INT = NULL, -- Hacer que @Periodo sea opcional
+    @TipoActividad VARCHAR(20) = NULL, -- Hacer que @TipoActividad sea opcional
     @Altitud VARCHAR(2) = NULL, -- Hacer que @Altitud sea opcional
     @Fondo VARCHAR(2) = NULL -- Hacer que @Fondo sea opcional
 AS
@@ -87,7 +163,7 @@ BEGIN
 
     COMMIT; -- Confirmar la transacción
 END;
-
+GO
 
 
 -- GRUPO --
