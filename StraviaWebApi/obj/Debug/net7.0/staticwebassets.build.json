@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "1LRqVOAswCM1FcbUw4KUc61qCBLQ8Z1xRWKjRoe/1x4=",
+  "Source": "StraviaWebApi",
+  "BasePath": "_content/StraviaWebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
