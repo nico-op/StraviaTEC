@@ -12,8 +12,12 @@ namespace StraviaTEC.Controllers
     [Route("api/[controller]")]
     public class ActividadController : ControllerBase
     {
-        private readonly string connectionString = "Server=DESKTOP-45ERV0H\\SQLEXPRESS04;Database=StraviaTEC;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;";
+        private readonly string connectionString;
 
+        public ActividadController(IConfiguration configuration)
+        {
+            connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
         
 
         [HttpGet("{usuario}")]

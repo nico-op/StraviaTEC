@@ -11,14 +11,14 @@
 -- CARRERA --
 
 -- RETO --
-CREATE PROCEDURE CrudReto
-    @Operacion VARCHAR(10),
-    @NombreReto VARCHAR(20),
-    @Privacidad VARCHAR(20),
-    @Periodo INT,
-    @TipoActividad VARCHAR(20),
-    @Altitud VARCHAR(2),
-    @Fondo VARCHAR(2)
+ALTER PROCEDURE CrudReto
+    @Operacion VARCHAR(10) = '',
+    @NombreReto VARCHAR(20) , -- Hacer que @NombreReto sea opcional
+    @Privacidad VARCHAR(20) , -- Hacer que @Privacidad sea opcional
+    @Periodo INT , -- Hacer que @Periodo sea opcional
+    @TipoActividad VARCHAR(20) , -- Hacer que @TipoActividad sea opcional
+    @Altitud VARCHAR(2) = NULL, -- Hacer que @Altitud sea opcional
+    @Fondo VARCHAR(2) = NULL -- Hacer que @Fondo sea opcional
 AS
 BEGIN
     BEGIN TRANSACTION; -- Iniciar la transacción
@@ -39,15 +39,16 @@ BEGIN
         
         PRINT 'Reto insertado exitosamente.';
     END
+	ELSE IF @Operacion = 'SELECT'
+		BEGIN
+			SELECT * FROM Reto
+		END 
     ELSE IF @Operacion = 'SELECT ONE'
     BEGIN
         -- Seleccionar un reto por nombre
         SELECT * FROM Reto WHERE NombreReto = @NombreReto;
     END
-	ELSE IF @Operacion = 'SELECT'
-	BEGIN
-		SELECT * FROM Reto
-	END 
+
     ELSE IF @Operacion = 'UPDATE'
     BEGIN
         -- Validar si el reto existe antes de actualizar

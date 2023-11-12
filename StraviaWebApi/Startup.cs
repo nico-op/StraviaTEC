@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.OpenApi.Models;
-using StraviaWebApi.Data;
+
    
 namespace StraviaWebApi
 {
@@ -28,9 +28,7 @@ namespace StraviaWebApi
                 });
             });
 
-            // Agrega el DbContext como servicio
-            services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
 
 
 
@@ -53,7 +51,7 @@ namespace StraviaWebApi
                 app.UseHsts();
             }
 
-            app.UseCors(_Cors);
+            app.UseCors("_Cors");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
