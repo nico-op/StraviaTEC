@@ -634,9 +634,7 @@ GO
 CREATE PROCEDURE CrudUsuarioPorReto
     @Operacion VARCHAR(10),
     @NombreUsuario VARCHAR(15) = NULL,
-    @NombreReto VARCHAR(20) = NULL,
-    @NuevoNombreUsuario VARCHAR(15) = NULL, -- Para la operación UPDATE
-    @NuevoNombreReto VARCHAR(20) = NULL -- Para la operación UPDATE
+    @NombreReto VARCHAR(20) = NULL
 AS
 BEGIN
     BEGIN TRANSACTION;
@@ -670,8 +668,8 @@ BEGIN
     BEGIN
         -- Actualizar relación Usuario-Reto
         UPDATE UsuariosPorReto
-        SET NombreUsuario = @NuevoNombreUsuario,
-            NombreReto = @NuevoNombreReto
+        SET NombreUsuario = @NombreUsuario,
+            NombreReto = @NombreReto
         WHERE NombreUsuario = @NombreUsuario AND NombreReto = @NombreReto;
 
         PRINT 'Relación Usuario-Reto actualizada exitosamente.';
@@ -685,6 +683,7 @@ BEGIN
 
     COMMIT;
 END;
+GO
 
 
 
