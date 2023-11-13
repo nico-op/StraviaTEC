@@ -542,7 +542,7 @@ BEGIN
 END;
 GO
 ------------------ CATEGORIA -------------------------------------
-alter PROCEDURE CrudCategoria
+CREATE PROCEDURE CrudCategoria
     @Operacion VARCHAR(10),
     @NombreCategoria VARCHAR(20) = NULL,
     @DescripcionCategoria VARCHAR(100) = NULL,
@@ -622,36 +622,70 @@ BEGIN
 END;
 GO
 
+--------
+--400 algo del servidor 
+--500 muchos parametros 
+-- 200 bien 
 
 
 
 
+------------------------------------------Usurario por reto----------------------------------------------------
+CREATE PROCEDURE CrudUsuarioPorReto
+    @Operacion VARCHAR(10),
+    @NombreUsuario VARCHAR(15) = NULL,
+    @NombreReto VARCHAR(20) = NULL,
+    @NuevoNombreUsuario VARCHAR(15) = NULL, -- Para la operación UPDATE
+    @NuevoNombreReto VARCHAR(20) = NULL -- Para la operación UPDATE
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    IF @Operacion = 'INSERT'
+    BEGIN
+        -- Insertar nueva relación Usuario-Reto
+        INSERT INTO UsuariosPorReto (NombreUsuario, NombreReto)
+        VALUES (@NombreUsuario, @NombreReto);
+
+        PRINT 'Relación Usuario-Reto insertada exitosamente.';
+    END
+    ELSE IF @Operacion = 'SELECT ONE'
+    BEGIN
+        -- Seleccionar una relación Usuario-Reto por Usuario y Reto
+        SELECT * FROM UsuariosPorReto WHERE NombreUsuario = @NombreUsuario AND NombreReto = @NombreReto;
+    END
+    ELSE IF @Operacion = 'SELECT'
+    BEGIN
+        -- Seleccionar todas las relaciones Usuario-Reto
+        SELECT * FROM UsuariosPorReto;
+    END
+    ELSE IF @Operacion = 'DELETE'
+    BEGIN
+        -- Eliminar la relación Usuario-Reto por Usuario y Reto
+        DELETE FROM UsuariosPorReto WHERE NombreUsuario = @NombreUsuario AND NombreReto = @NombreReto;
+
+        PRINT 'Relación Usuario-Reto eliminada exitosamente.';
+    END
+    ELSE IF @Operacion = 'UPDATE'
+    BEGIN
+        -- Actualizar relación Usuario-Reto
+        UPDATE UsuariosPorReto
+        SET NombreUsuario = @NuevoNombreUsuario,
+            NombreReto = @NuevoNombreReto
+        WHERE NombreUsuario = @NombreUsuario AND NombreReto = @NombreReto;
+
+        PRINT 'Relación Usuario-Reto actualizada exitosamente.';
+    END
+    ELSE
+    BEGIN
+        ROLLBACK;
+        PRINT 'Error: Operación no válida.';
+        RETURN;
+    END
+
+    COMMIT;
+END;
 
 
 
-
-
-
-
---- ELIMINAR TODOS LOS PROCEDIMIENTOS ALMACENADOS
---DECLARE @ProcedureName NVARCHAR(128)
---DECLARE ProcedureCursor CURSOR FOR
---SELECT ROUTINE_NAME
---FROM INFORMATION_SCHEMA.ROUTINES
---WHERE ROUTINE_TYPE = 'PROCEDURE'
-
---OPEN ProcedureCursor
-
---FETCH NEXT FROM ProcedureCursor INTO @ProcedureName
---WHILE @@FETCH_STATUS = 0
---BEGIN
---    DECLARE @DropStatement NVARCHAR(MAX)
---    SET @DropStatement = 'DROP PROCEDURE ' + @ProcedureName
---    EXEC sp_executesql @DropStatement
-
---    FETCH NEXT FROM ProcedureCursor INTO @ProcedureName
---END
-
---CLOSE ProcedureCursor
---DEALLOCATE ProcedureCursor
 

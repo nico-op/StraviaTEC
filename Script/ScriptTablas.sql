@@ -8,12 +8,13 @@ CREATE TABLE Usuario(
     Fecha_actual DATETIME, -- Cambiado a DATETIME
     Nacionalidad VARCHAR(20) NOT NULL,
     Foto VARCHAR(250),
-    NombreUsuario VARCHAR(15) NOT NULL,
+    NombreUsuario VARCHAR(15) NOT NULL, 
     Contrasena VARCHAR(15) NOT NULL,
     PRIMARY KEY(NombreUsuario),
     UNIQUE (Contrasena),
     Edad AS DATEDIFF(YEAR, Fecha_nacimiento, GETDATE()) 
 );
+
 
 
 -- Tabla Amigo
@@ -100,6 +101,7 @@ CREATE TABLE Comentario(
 	FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario),
 	FOREIGN KEY (ActividadID) REFERENCES Actividad(ActividadID)
 );
+
 
 
 --Categoria 
