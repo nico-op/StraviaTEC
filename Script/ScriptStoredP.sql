@@ -741,3 +741,95 @@ BEGIN
 END;
 GO
 
+
+
+-------------------------------------Usuario por grupo----------------------------------------------------
+CREATE PROCEDURE CrudUsuariosPorGrupo
+    @Operacion VARCHAR(10),
+    @NombreUsuario VARCHAR(15) = NULL,
+    @GrupoID VARCHAR(20) = NULL
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    IF @Operacion = 'INSERT'
+    BEGIN
+        -- Insertar nueva relación Usuario-Grupo
+        INSERT INTO UsuariosPorGrupo (NombreUsuario, GrupoID)
+        VALUES (@NombreUsuario, @GrupoID);
+
+        PRINT 'Relación Usuario-Grupo insertada exitosamente.';
+    END
+    ELSE IF @Operacion = 'SELECT ONE'
+    BEGIN
+        -- Seleccionar una relación Usuario-Grupo por Usuario y Grupo
+        SELECT * FROM UsuariosPorGrupo WHERE NombreUsuario = @NombreUsuario AND GrupoID = @GrupoID;
+    END
+    ELSE IF @Operacion = 'SELECT'
+    BEGIN
+        -- Seleccionar todas las relaciones Usuario-Grupo
+        SELECT * FROM UsuariosPorGrupo;
+    END
+    ELSE IF @Operacion = 'DELETE'
+    BEGIN
+        -- Eliminar la relación Usuario-Grupo por Usuario y Grupo
+        DELETE FROM UsuariosPorGrupo WHERE NombreUsuario = @NombreUsuario AND GrupoID = @GrupoID;
+
+        PRINT 'Relación Usuario-Grupo eliminada exitosamente.';
+    END
+    ELSE
+    BEGIN
+        ROLLBACK;
+        PRINT 'Error: Operación no válida.';
+        RETURN;
+    END
+
+    COMMIT;
+END;
+GO
+---------------------------------
+CREATE PROCEDURE CrudPatrocinadoresPorReto
+    @Operacion VARCHAR(10),
+    @NombreReto VARCHAR(20) = NULL,
+    @NombreComercial VARCHAR(20) = NULL
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    IF @Operacion = 'INSERT'
+    BEGIN
+        -- Insertar nueva relación Patrocinador-Reto
+        INSERT INTO PatrocinadoresPorReto (NombreReto, NombreComercial)
+        VALUES (@NombreReto, @NombreComercial);
+
+        PRINT 'Relación Patrocinador-Reto insertada exitosamente.';
+    END
+    ELSE IF @Operacion = 'SELECT ONE'
+    BEGIN
+        -- Seleccionar una relación Patrocinador-Reto por NombreReto y NombreComercial
+        SELECT * FROM PatrocinadoresPorReto
+        WHERE NombreReto = @NombreReto AND NombreComercial = @NombreComercial;
+    END
+    ELSE IF @Operacion = 'SELECT'
+    BEGIN
+        -- Seleccionar todas las relaciones Patrocinador-Reto
+        SELECT * FROM PatrocinadoresPorReto;
+    END
+    ELSE IF @Operacion = 'DELETE'
+    BEGIN
+        -- Eliminar la relación Patrocinador-Reto por NombreReto y NombreComercial
+        DELETE FROM PatrocinadoresPorReto
+        WHERE NombreReto = @NombreReto AND NombreComercial = @NombreComercial;
+
+        PRINT 'Relación Patrocinador-Reto eliminada exitosamente.';
+    END
+    ELSE
+    BEGIN
+        ROLLBACK;
+        PRINT 'Error: Operación no válida.';
+        RETURN;
+    END
+
+    COMMIT;
+END;
+GO
