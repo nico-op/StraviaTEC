@@ -686,5 +686,58 @@ END;
 GO
 
 
+--------------------------------------UsuarioPorCarrera--------------------------------------
+CREATE PROCEDURE CrudUsuariosPorCarrera
+    @Operacion VARCHAR(10),
+    @NombreUsuario VARCHAR(15) = NULL,
+    @NombreCarrera VARCHAR(20) = NULL
+AS
+BEGIN
+    BEGIN TRANSACTION;
 
+    IF @Operacion = 'INSERT'
+    BEGIN
+        -- Insertar nueva relación Usuario-Carrera
+        INSERT INTO UsuariosPorCarrera (NombreUsuario, NombreCarrera)
+        VALUES (@NombreUsuario, @NombreCarrera);
+
+        PRINT 'Relación Usuario-Carrera insertada exitosamente.';
+    END
+    ELSE IF @Operacion = 'SELECT ONE'
+    BEGIN
+        -- Seleccionar una relación Usuario-Carrera por Usuario y Carrera
+        SELECT * FROM UsuariosPorCarrera WHERE NombreUsuario = @NombreUsuario AND NombreCarrera = @NombreCarrera;
+    END
+    ELSE IF @Operacion = 'SELECT'
+    BEGIN
+        -- Seleccionar todas las relaciones Usuario-Carrera
+        SELECT * FROM UsuariosPorCarrera;
+    END
+    ELSE IF @Operacion = 'DELETE'
+    BEGIN
+        -- Eliminar la relación Usuario-Carrera por Usuario y Carrera
+        DELETE FROM UsuariosPorCarrera WHERE NombreUsuario = @NombreUsuario AND NombreCarrera = @NombreCarrera;
+
+        PRINT 'Relación Usuario-Carrera eliminada exitosamente.';
+    END
+    ELSE IF @Operacion = 'UPDATE'
+    BEGIN
+        -- Actualizar relación Usuario-Carrera
+        UPDATE UsuariosPorCarrera
+        SET NombreUsuario = @NombreUsuario,
+            NombreCarrera = @NombreCarrera
+        WHERE NombreUsuario = @NombreUsuario AND NombreCarrera = @NombreCarrera;
+
+        PRINT 'Relación Usuario-Carrera actualizada exitosamente.';
+    END
+    ELSE
+    BEGIN
+        ROLLBACK;
+        PRINT 'Error: Operación no válida.';
+        RETURN;
+    END
+
+    COMMIT;
+END;
+GO
 

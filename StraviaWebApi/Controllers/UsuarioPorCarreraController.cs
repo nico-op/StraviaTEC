@@ -10,23 +10,23 @@ namespace StraviaTEC.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsuarioPorRetoController : ControllerBase
+    public class UsuariosPorCarreraController : ControllerBase
     {
         private readonly string connectionString;
 
-        public UsuarioPorRetoController(IConfiguration configuration)
+        public UsuariosPorCarreraController(IConfiguration configuration)
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
         [HttpGet]
-        public IActionResult GetUsuariosPorRetos()
+        public IActionResult GetUsuariosPorCarreras()
         {
-            List<UsuarioPorReto> usuariosPorRetos = new List<UsuarioPorReto>();
+            List<UsuariosPorCarrera> usuariosPorCarreras = new List<UsuariosPorCarrera>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand("CrudUsuarioPorReto", connection);
+                SqlCommand command = new SqlCommand("CrudUsuariosPorCarrera", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Operacion", "SELECT");
 
@@ -36,32 +36,32 @@ namespace StraviaTEC.Controllers
                 {
                     while (reader.Read())
                     {
-                        UsuarioPorReto usuarioPorReto = new UsuarioPorReto
+                        UsuariosPorCarrera usuarioPorCarrera = new UsuariosPorCarrera
                         {
                             NombreUsuario = reader["NombreUsuario"].ToString(),
-                            NombreReto = reader["NombreReto"].ToString(),
+                            NombreCarrera = reader["NombreCarrera"].ToString(),
                         };
 
-                        usuariosPorRetos.Add(usuarioPorReto);
+                        usuariosPorCarreras.Add(usuarioPorCarrera);
                     }
                 }
             }
 
-            return Ok(usuariosPorRetos);
+            return Ok(usuariosPorCarreras);
         }
 
-        [HttpGet("{nombreUsuario}/{nombreReto}")]
-        public IActionResult GetUsuarioPorReto(string nombreUsuario, string nombreReto)
+        [HttpGet("{nombreUsuario}/{nombreCarrera}")]
+        public IActionResult GetUsuarioPorCarrera(string nombreUsuario, string nombreCarrera)
         {
-            UsuarioPorReto usuarioPorReto = null;
+            UsuariosPorCarrera usuarioPorCarrera = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand("CrudUsuarioPorReto", connection);
+                SqlCommand command = new SqlCommand("CrudUsuariosPorCarrera", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Operacion", "SELECT ONE");
                 command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
-                command.Parameters.AddWithValue("@NombreReto", nombreReto);
+                command.Parameters.AddWithValue("@NombreCarrera", nombreCarrera);
 
                 connection.Open();
 
@@ -69,57 +69,57 @@ namespace StraviaTEC.Controllers
                 {
                     if (reader.Read())
                     {
-                        usuarioPorReto = new UsuarioPorReto
+                        usuarioPorCarrera = new UsuariosPorCarrera
                         {
                             NombreUsuario = reader["NombreUsuario"].ToString(),
-                            NombreReto = reader["NombreReto"].ToString(),
+                            NombreCarrera = reader["NombreCarrera"].ToString(),
                         };
                     }
                 }
             }
 
-            if (usuarioPorReto == null)
+            if (usuarioPorCarrera == null)
             {
                 return NotFound();
             }
 
-            return Ok(usuarioPorReto);
+            return Ok(usuarioPorCarrera);
         }
 
         [HttpPost]
-        public IActionResult PostUsuarioPorReto([FromBody] UsuarioPorReto nuevoUsuarioPorReto)
+        public IActionResult PostUsuarioPorCarrera([FromBody] UsuariosPorCarrera nuevoUsuarioPorCarrera)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand("CrudUsuarioPorReto", connection);
+                SqlCommand command = new SqlCommand("CrudUsuariosPorCarrera", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Operacion", "INSERT");
-                command.Parameters.AddWithValue("@NombreUsuario", nuevoUsuarioPorReto.NombreUsuario);
-                command.Parameters.AddWithValue("@NombreReto", nuevoUsuarioPorReto.NombreReto);
+                command.Parameters.AddWithValue("@NombreUsuario", nuevoUsuarioPorCarrera.NombreUsuario);
+                command.Parameters.AddWithValue("@NombreCarrera", nuevoUsuarioPorCarrera.NombreCarrera);
 
                 connection.Open();
 
                 command.ExecuteNonQuery();
             }
 
-            return CreatedAtAction(nameof(GetUsuarioPorReto), new { nombreUsuario = nuevoUsuarioPorReto.NombreUsuario, nombreReto = nuevoUsuarioPorReto.NombreReto }, nuevoUsuarioPorReto);
+            return CreatedAtAction(nameof(GetUsuarioPorCarrera), new { nombreUsuario = nuevoUsuarioPorCarrera.NombreUsuario, nombreCarrera = nuevoUsuarioPorCarrera.NombreCarrera }, nuevoUsuarioPorCarrera);
         }
 
-        [HttpPut("{nombreUsuario}/{nombreReto}")]
-        public IActionResult PutUsuarioPorReto(string nombreUsuario, string nombreReto, [FromBody] UsuarioPorReto usuarioPorRetoActualizado)
+        [HttpPut("{nombreUsuario}/{nombreCarrera}")]
+        public IActionResult PutUsuarioPorCarrera(string nombreUsuario, string nombreCarrera, [FromBody] UsuariosPorCarrera usuarioPorCarreraActualizado)
         {
-            if (nombreUsuario != usuarioPorRetoActualizado.NombreUsuario || nombreReto != usuarioPorRetoActualizado.NombreReto)
+            if (nombreUsuario != usuarioPorCarreraActualizado.NombreUsuario || nombreCarrera != usuarioPorCarreraActualizado.NombreCarrera)
             {
                 return BadRequest();
             }
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand("CrudUsuarioPorReto", connection);
+                SqlCommand command = new SqlCommand("CrudUsuariosPorCarrera", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Operacion", "UPDATE");
-                command.Parameters.AddWithValue("@NombreUsuario", usuarioPorRetoActualizado.NombreUsuario);
-                command.Parameters.AddWithValue("@NombreReto", usuarioPorRetoActualizado.NombreReto);
+                command.Parameters.AddWithValue("@NombreUsuario", usuarioPorCarreraActualizado.NombreUsuario);
+                command.Parameters.AddWithValue("@NombreCarrera", usuarioPorCarreraActualizado.NombreCarrera);
 
                 connection.Open();
 
@@ -129,16 +129,16 @@ namespace StraviaTEC.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{nombreUsuario}/{nombreReto}")]
-        public IActionResult DeleteUsuarioPorReto(string nombreUsuario, string nombreReto)
+        [HttpDelete("{nombreUsuario}/{nombreCarrera}")]
+        public IActionResult DeleteUsuarioPorCarrera(string nombreUsuario, string nombreCarrera)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand("CrudUsuarioPorReto", connection);
+                SqlCommand command = new SqlCommand("CrudUsuariosPorCarrera", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Operacion", "DELETE");
                 command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
-                command.Parameters.AddWithValue("@NombreReto", nombreReto);
+                command.Parameters.AddWithValue("@NombreCarrera", nombreCarrera);
 
                 connection.Open();
 
