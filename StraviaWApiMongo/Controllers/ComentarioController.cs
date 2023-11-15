@@ -30,7 +30,7 @@ public class ComentarioController : ControllerBase
         return await _comentarioCollection.Find(comentario => true).ToListAsync();
     }
 
-    [HttpGet("{id:length(24)}", Name = "GetComentario")]
+    [HttpGet("{id}", Name = "GetComentario")]
     public async Task<ActionResult<Comentario>> Read(string id)
     {
         var comentario = await _comentarioCollection.Find<Comentario>(comentario => comentario.ComentarioID == id).FirstOrDefaultAsync();
@@ -43,7 +43,7 @@ public class ComentarioController : ControllerBase
         return comentario;
     }
 
-    [HttpPut("{id:length(24)}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Comentario comentarioIn)
     {
         var comentario = await _comentarioCollection.Find<Comentario>(comentario => comentario.ComentarioID == id).FirstOrDefaultAsync();
@@ -58,7 +58,7 @@ public class ComentarioController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:length(24)}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
         var comentario = await _comentarioCollection.Find<Comentario>(comentario => comentario.ComentarioID == id).FirstOrDefaultAsync();

@@ -7,41 +7,33 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+
 
 namespace StraviaWApiMongo
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
-
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Get the MongoDB connection string from the appsettings.json file
-            string connectionString = _configuration.GetConnectionString("MongoDBConnection");
+            // Configurar la conexión a la base de datos MongoDB
+            var mongoDbSettings = Configuration.GetSection("MongoDBSettings");
+            string connectionString = mongoDbSettings["MongoDBConnection"];
+            string databaseName = mongoDbSettings["DatabaseName"];
 
-            // Create a new MongoClient object
             var mongoClient = new MongoClient(connectionString);
-
-            // Get the database name from the appsettings.json file
-            string databaseName = _configuration.GetValue<string>("MongoDBSettings:DatabaseName");
-
-            // Get the database object
             var database = mongoClient.GetDatabase(databaseName);
 
-            // Register the database object with the DI container
             services.AddSingleton(database);
 
-            // Add other services to the DI container
-            services.AddControllers();
 
-
-                        services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mongo Stravia API", Version = "v1" });
             });
@@ -59,6 +51,7 @@ namespace StraviaWApiMongo
 
             // Configurar otros servicios necesarios para tu aplicación
             services.AddControllers();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
