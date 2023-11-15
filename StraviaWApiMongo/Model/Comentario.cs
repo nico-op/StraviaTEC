@@ -2,10 +2,10 @@ using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 public class Comentario
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string ComentarioID { get; set; }
 
     [BsonElement("Contenido")]
