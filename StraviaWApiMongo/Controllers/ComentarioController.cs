@@ -4,56 +4,57 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 
+using StraviaWApiMongo.Services;
+
+namespace StraviaWApiMongo.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class ComentarioController : ControllerBase
 {
-    private readonly IMongoCollection<Comentario> _comentarioCollection;
+    private readonly MongoDBService _mongoDBService;
+    
 
-    public ComentarioController(IMongoDatabase database)
-    {
-        _comentarioCollection = database.GetCollection<Comentario>("Comentario");
-    }
-
-
-
-    [HttpPost]
-    public async Task<ActionResult<Comentario>> Create(Comentario comentario)
-    {
-        await _comentarioCollection.InsertOneAsync(comentario);
-        return CreatedAtRoute("GetComentario", new { id = comentario.ComentarioID.ToString() }, comentario);
+    public ComentarioController(MongoDBService mongoDBService) {
+        _mongoDBService = mongoDBService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Comentario>>> Read()
+    public async Task<ActionResult<List<Comentario>>> Get()
     {
-        return await _comentarioCollection.Find(comentario => true).ToListAsync();
+        var comentarios = await _mongoDBService.GetAsync();
+        return Ok(comentarios);
     }
 
     [HttpGet("{id}", Name = "GetComentario")]
-    public async Task<ActionResult<Comentario>> Read(string id)
+    public async Task<ActionResult<Comentario>> GetComentario(string id)
     {
-        var comentario = await _comentarioCollection.Find<Comentario>(comentario => comentario.ComentarioID == id).FirstOrDefaultAsync();
-
+        var comentario = await _mongoDBService.GetComentarioAsync(id);
         if (comentario == null)
         {
             return NotFound();
         }
+        return Ok(comentario);
+    }
 
-        return comentario;
+    [HttpPost]
+    public async Task<ActionResult<Comentario>> Create(Comentario comentario)
+    {
+        await _mongoDBService.CreateAsync(comentario);
+        return CreatedAtRoute("GetComentario", new { id = comentario.ComentarioID.ToString() }, comentario);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Comentario comentarioIn)
     {
-        var comentario = await _comentarioCollection.Find<Comentario>(comentario => comentario.ComentarioID == id).FirstOrDefaultAsync();
+        var comentario = await _mongoDBService.GetComentarioAsync(id);
 
         if (comentario == null)
         {
             return NotFound();
         }
 
-        await _comentarioCollection.ReplaceOneAsync(comentario => comentario.ComentarioID == id, comentarioIn);
+        await _mongoDBService.UpdateAsync(id, comentarioIn);
 
         return NoContent();
     }
@@ -61,15 +62,16 @@ public class ComentarioController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var comentario = await _comentarioCollection.Find<Comentario>(comentario => comentario.ComentarioID == id).FirstOrDefaultAsync();
+        var comentario = await _mongoDBService.GetComentarioAsync(id);
 
         if (comentario == null)
         {
             return NotFound();
         }
 
-        await _comentarioCollection.DeleteOneAsync(comentario => comentario.ComentarioID == id);
+        await _mongoDBService.DeleteAsync(id);
 
         return NoContent();
     }
+
 }

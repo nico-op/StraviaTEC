@@ -1,12 +1,13 @@
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;  // Add this line
 using MongoDB.Driver;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Configuration;
+
+using StraviaWApiMongo.Services;
 
 
 namespace StraviaWApiMongo
@@ -22,16 +23,10 @@ namespace StraviaWApiMongo
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configurar la conexión a la base de datos MongoDB
-            var mongoDbSettings = Configuration.GetSection("MongoDBSettings");
-            string connectionString = mongoDbSettings["MongoDBConnection"];
-            string databaseName = mongoDbSettings["DatabaseName"];
-
-            var mongoClient = new MongoClient(connectionString);
-            var database = mongoClient.GetDatabase(databaseName);
-
-            services.AddSingleton(database);
-
+            // Configurar la conexión a la base de datos MongoDBSettings
+            services.Configure<MongoDBSettings>(Configuration.GetSection("MongoDBSettings"));
+            services.AddSingleton<IMongoDBSettings>(d => d.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+            services.AddSingleton<MongoDBService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -51,7 +46,6 @@ namespace StraviaWApiMongo
 
             // Configurar otros servicios necesarios para tu aplicación
             services.AddControllers();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
