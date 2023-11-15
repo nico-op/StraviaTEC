@@ -8,7 +8,7 @@ using StraviaWApiMongo.Services;
 
 namespace StraviaWApiMongo.Controllers;
 
-[Route("api/[controller]")]
+[Route("/")]
 [ApiController]
 public class ComentarioController : ControllerBase
 {
