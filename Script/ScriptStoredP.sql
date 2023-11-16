@@ -992,8 +992,5 @@ BEGIN
     -- Confirmar la transacción
     COMMIT TRANSACTION;
 END;
+GO
 
--- Eliminar procedimientos almacenados
-DROP PROCEDURE IF EXISTS CrudUsuariosPorCarrera;
-DROP PROCEDURE IF EXISTS CrudPatrocinadoresPorReto;
-DROP PROCEDURE IF EXISTS GestionarCuentaBancaria;
