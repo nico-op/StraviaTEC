@@ -899,6 +899,51 @@ GO
 
 
 ---------------------------------Patrocinadores por Carrera----------------------------------------------
+CREATE PROCEDURE CrudPatrocinadoresPorCarrera
+    @Operacion VARCHAR(10),
+    @NombreCarrera VARCHAR(20) = NULL,
+    @NombreComercial VARCHAR(20) = NULL
+AS
+BEGIN
+    BEGIN TRANSACTION;
+
+    IF @Operacion = 'INSERT'
+    BEGIN
+        -- Insertar nueva relación Patrocinador-Carrera
+        INSERT INTO PatrocinadoresPorCarrera (NombreCarrera, NombreComercial)
+        VALUES (@NombreCarrera, @NombreComercial);
+
+        PRINT 'Relación Patrocinador-Carrera insertada exitosamente.';
+    END
+    ELSE IF @Operacion = 'SELECT ONE'
+    BEGIN
+        -- Seleccionar una relación Patrocinador-Carrera por NombreCarrera y NombreComercial
+        SELECT * FROM PatrocinadoresPorCarrera
+        WHERE NombreCarrera = @NombreCarrera AND NombreComercial = @NombreComercial;
+    END
+    ELSE IF @Operacion = 'SELECT'
+    BEGIN
+        -- Seleccionar todas las relaciones Patrocinador-Carrera
+        SELECT * FROM PatrocinadoresPorCarrera;
+    END
+    ELSE IF @Operacion = 'DELETE'
+    BEGIN
+        -- Eliminar la relación Patrocinador-Carrera por NombreCarrera y NombreComercial
+        DELETE FROM PatrocinadoresPorCarrera
+        WHERE NombreCarrera = @NombreCarrera AND NombreComercial = @NombreComercial;
+
+        PRINT 'Relación Patrocinador-Carrera eliminada exitosamente.';
+    END
+    ELSE
+    BEGIN
+        ROLLBACK;
+        PRINT 'Error: Operación no válida.';
+        RETURN;
+    END
+
+    COMMIT;
+END;
+GO
 
 
 
