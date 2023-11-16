@@ -541,6 +541,69 @@ BEGIN
     END CATCH;
 END;
 GO
+
+
+--------------------Patrocinadores--------------------------------
+CREATE PROCEDURE CrudPatrocinador
+    @Operacion VARCHAR(10),
+    @NombreLegal VARCHAR(20) = NULL,
+    @Logo VARCHAR(250) = NULL,
+    @Telefono INT = NULL,
+    @NombreComercial VARCHAR(20) = NULL
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @Operacion = 'SELECT'
+        BEGIN
+            SELECT NombreLegal, Logo, Telefono, NombreComercial
+            FROM Patrocinador;
+        END
+        ELSE IF @Operacion = 'SELECT ONE'
+        BEGIN
+            SELECT NombreLegal, Logo, Telefono, NombreComercial
+            FROM Patrocinador
+            WHERE NombreComercial = @NombreComercial;
+        END
+        ELSE IF @Operacion = 'INSERT'
+        BEGIN
+            INSERT INTO Patrocinador (NombreLegal, Logo, Telefono, NombreComercial)
+            VALUES (@NombreLegal, @Logo, @Telefono, @NombreComercial);
+        END
+        ELSE IF @Operacion = 'UPDATE'
+        BEGIN
+            UPDATE Patrocinador
+            SET NombreLegal = @NombreLegal,
+                Logo = @Logo,
+                Telefono = @Telefono
+            WHERE NombreComercial = @NombreComercial;
+        END
+        ELSE IF @Operacion = 'DELETE'
+        BEGIN
+            DELETE FROM Patrocinador
+            WHERE NombreComercial = @NombreComercial;
+        END
+
+        COMMIT; -- Confirmar la transacción
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK; -- Deshacer la transacción en caso de error
+
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+    END CATCH;
+END;
+GO
+
+
 ------------------ CATEGORIA -------------------------------------
 CREATE PROCEDURE CrudCategoria
     @Operacion VARCHAR(10),
