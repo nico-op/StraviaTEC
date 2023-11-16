@@ -20,77 +20,83 @@ namespace StraviaTEC.Controllers
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        [HttpPost]
-        public IActionResult CreateCategoria([FromBody] Categoria categoria)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("CrudCategoria", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@Operacion", "INSERT");
-                        command.Parameters.AddWithValue("@NombreCategoria", categoria.NombreCategoria);
-                        command.Parameters.AddWithValue("@DescripcionCategoria", categoria.DescripcionCategoria);
-                        
-
-                        command.ExecuteNonQuery();
-                    }
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception message or return it in a BadRequest
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("{nombreCarrera}")]
-        public IActionResult GetCategoria(string nombreCarrera)
+        [HttpGet("{nombreCarrera}/{nombreCategoria}")]
+        public IActionResult GetCategoria(string nombreCarrera, string nombreCategoria)
         {
             Categoria categoria = null;
-
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GestionarCategoriasPorCarrera", connection))
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("CrudCategoria", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@Operacion", "SELECT ONE");
-                        command.Parameters.AddWithValue("@NombreCarrera", nombreCarrera);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@NombreCarrera", nombreCarrera);
+                    command.Parameters.AddWithValue("@NombreCategoria", nombreCategoria);
+                    command.Parameters.AddWithValue("@Operacion", "SELECT ONE");
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            if (reader.Read())
+                            categoria = new Categoria
                             {
-                                categoria = new Categoria
-                                {
-                                    NombreCategoria = reader["NombreCategoria"].ToString(),
-                                    DescripcionCategoria = reader["DescripcionCategoria"].ToString(),
-                                };
-                            }
+                                NombreCategoria = reader["NombreCategoria"].ToString(),
+                                DescripcionCategoria = reader["DescripcionCategoria"].ToString(),
+                                NombreCarrera = reader["NombreCarrera"].ToString()
+                            };
                         }
                     }
                 }
-
-                if (categoria == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(categoria);
             }
-            catch (Exception ex)
+            return Ok(categoria);
+        }
+
+        [HttpGet("{nombreCarrera}")]
+        public IActionResult GetAllCategorias(string nombreCarrera)
+        {
+            var categorias = new List<Categoria>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                // Log the exception message or return it in a BadRequest
-                return BadRequest(ex.Message);
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GestionarCategoriasPorCarrera", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@NombreCarrera", nombreCarrera);
+                    command.Parameters.AddWithValue("@Operacion", "SELECT");
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var categoria = new Categoria
+                            {
+                                NombreCategoria = reader["NombreCategoria"].ToString(),
+                                DescripcionCategoria = reader["DescripcionCategoria"].ToString(),
+                                NombreCarrera = reader["NombreCarrera"].ToString()
+                            };
+                            categorias.Add(categoria);
+                        }
+                    }
+                }
             }
+            return Ok(categorias);
+        }
+
+        [HttpPost("{nombreCarrera}")]
+        public IActionResult InsertCategoria(string nombreCarrera)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GestionarCategoriasPorCarrera", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@NombreCarrera", nombreCarrera);
+                    command.Parameters.AddWithValue("@Operacion", "INSERT");
+                    command.ExecuteNonQuery();
+                }
+            }
+            return Ok();
         }
 
 

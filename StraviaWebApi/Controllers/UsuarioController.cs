@@ -188,17 +188,15 @@ namespace StraviaWebApi
 
         // Se añade la vista
 
-        [HttpGet("AmigosUsuario")]
-        public IActionResult GetAmigosUsuario(string nombreUsuario)
+        [HttpGet("Amigos")]
+        public IActionResult GetAmigos()
         {
             var amigos = new List<Usuario>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT Foto, NombreUsuario FROM VistaAmigosUsuario WHERE UsuarioOrigen = @NombreUsuario", connection))
+                using (SqlCommand command = new SqlCommand("SELECT Foto, NombreUsuario FROM VistaAmigosUsuario", connection))
                 {
-                    command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
-
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -215,9 +213,5 @@ namespace StraviaWebApi
             }
             return Ok(amigos);
         }
-
-
-
-
     }
 }

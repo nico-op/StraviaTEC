@@ -455,14 +455,8 @@ BEGIN
     END TRY
     BEGIN CATCH
         ROLLBACK;
-        DECLARE @ErrorMessage NVARCHAR(4000);
-        DECLARE @ErrorSeverity INT;
-        DECLARE @ErrorState INT;
-
-        SELECT
-            @ErrorMessage = ERROR_MESSAGE(),
-            @ErrorSeverity = ERROR_SEVERITY(),
-            @ErrorState = ERROR_STATE();
+        PRINT 'Error: Operación no válida.';
+        RETURN;
     END CATCH;
 END;
 GO
@@ -530,14 +524,8 @@ BEGIN
     END TRY
     BEGIN CATCH
         ROLLBACK;
-        DECLARE @ErrorMessage NVARCHAR(4000);
-        DECLARE @ErrorSeverity INT;
-        DECLARE @ErrorState INT;
-
-        SELECT
-            @ErrorMessage = ERROR_MESSAGE(),
-            @ErrorSeverity = ERROR_SEVERITY(),
-            @ErrorState = ERROR_STATE();
+        PRINT 'Error: Operación no válida.';
+        RETURN;
     END CATCH;
 END;
 GO
@@ -590,98 +578,47 @@ BEGIN
     BEGIN CATCH
         IF @@TRANCOUNT > 0
             ROLLBACK; -- Deshacer la transacción en caso de error
-
-        DECLARE @ErrorMessage NVARCHAR(4000);
-        DECLARE @ErrorSeverity INT;
-        DECLARE @ErrorState INT;
-
-        SELECT
-            @ErrorMessage = ERROR_MESSAGE(),
-            @ErrorSeverity = ERROR_SEVERITY(),
-            @ErrorState = ERROR_STATE();
+			PRINT 'Error: Operación no válida.';
+			RETURN;
     END CATCH;
 END;
 GO
 
 
 ------------------ CATEGORIA -------------------------------------
-CREATE PROCEDURE CrudCategoria
-    @Operacion VARCHAR(10),
-    @NombreCategoria VARCHAR(20) = NULL,
-    @DescripcionCategoria VARCHAR(100) = NULL,
-    @NombreCarrera VARCHAR(20) = NULL,
-    @NombreUsuario VARCHAR(15) = NULL
+CREATE PROCEDURE GestionarCategoriasPorCarrera
+    @NombreCarrera VARCHAR(20),
+	@NombreCategoria VARCHAR(20) = NULL,
+    @Operacion VARCHAR(10)
 AS
 BEGIN
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        IF @Operacion = 'INSERT'
-        BEGIN
-            DECLARE @Edad INT;
-            DECLARE @CategoriaEdad VARCHAR(20);
-
-            -- Obtener la edad del Usuario
-            SELECT @Edad = DATEDIFF(YEAR, Fecha_nacimiento, GETDATE())
-            FROM Usuario
-            WHERE NombreUsuario = @NombreUsuario;
-
-            -- Lógica para determinar la categoría en base a la edad
-            IF @Edad < 15
-                SET @CategoriaEdad = 'Junior';
-            ELSE IF @Edad >= 15 AND @Edad <= 23
-                SET @CategoriaEdad = 'Sub-23';
-            ELSE IF @Edad >= 24 AND @Edad <= 30
-                SET @CategoriaEdad = 'Open';
-            ELSE IF @Edad > 30 AND @Edad <= 40
-                SET @CategoriaEdad = 'Master A';
-            ELSE IF @Edad > 40 AND @Edad <= 50
-                SET @CategoriaEdad = 'Master B';
-            ELSE
-                SET @CategoriaEdad = 'Master C';
-
-            -- Insertar en la tabla Categoria
-            INSERT INTO Categoria (
-                NombreCategoria, 
-                DescripcionCategoria, 
-                NombreCarrera
-            ) VALUES (
-                @CategoriaEdad, -- Utilizar la categoría calculada
-                @DescripcionCategoria, 
-                @NombreCarrera
-            );
-            PRINT 'Categoría registrada exitosamente.';
-        END
-        ELSE IF @Operacion = 'SELECT ONE'
-        BEGIN
-            SELECT 
-                NombreCategoria, 
-                DescripcionCategoria, 
-                NombreCarrera
-            FROM Categoria
-            WHERE NombreCarrera = @NombreCarrera;
-        END
-        ELSE
-        BEGIN
-            -- Operación no válida
-            ROLLBACK;
-            PRINT 'Error: Operación no válida.';
-            RETURN;
-        END
-
-        COMMIT; -- Confirmar la transacción
-    END TRY
-    BEGIN CATCH
-        ROLLBACK;
-        DECLARE @ErrorMessage NVARCHAR(4000);
-        DECLARE @ErrorSeverity INT;
-        DECLARE @ErrorState INT;
-
-        SELECT
-            @ErrorMessage = ERROR_MESSAGE(),
-            @ErrorSeverity = ERROR_SEVERITY(),
-            @ErrorState = ERROR_STATE();
-    END CATCH;
+    IF @Operacion = 'INSERT'
+    BEGIN
+        -- Inserción de categorías por defecto asociadas a la carrera
+        INSERT INTO Categoria (NombreCategoria, DescripcionCategoria, NombreCarrera)
+        VALUES 
+            ('Junior', 'Menor de 15 años', @NombreCarrera),
+            ('Sub-23', 'De 15 a 23 años', @NombreCarrera),
+            ('Open', 'De 24 a 30 años', @NombreCarrera),
+            ('Elite', 'Cualquiera que quiera inscribirse', @NombreCarrera),
+            ('Master A', 'De 30 a 40 años', @NombreCarrera),
+            ('Master B', 'De 41 a 50 años', @NombreCarrera),
+            ('Master C', 'Más de 51 años', @NombreCarrera);
+    END
+    ELSE IF @Operacion = 'SELECT'
+    BEGIN
+        -- Selección de todas las categorías de una carrera
+        SELECT *
+        FROM Categoria
+        WHERE NombreCarrera = @NombreCarrera;
+    END
+	ELSE IF @Operacion = 'SELECT ONE'
+	BEGIN
+		-- Selección de una categoría específica por nombre de categoría
+		SELECT *
+		FROM Categoria
+		WHERE NombreCarrera = @NombreCarrera AND NombreCategoria = @NombreCategoria;
+	END
 END;
 GO
 
