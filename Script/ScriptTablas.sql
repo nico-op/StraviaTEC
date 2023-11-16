@@ -123,6 +123,7 @@ CREATE TABLE UsuariosPorReto (
     FOREIGN KEY (NombreReto) REFERENCES Reto(NombreReto)
 );
 
+SELECT * FROM Reto;
 --UsuariosPorCarrera
 CREATE TABLE UsuariosPorCarrera (
     NombreUsuario VARCHAR(15),
@@ -151,7 +152,7 @@ CREATE TABLE PatrocinadoresPorReto(
     FOREIGN KEY (NombreComercial) REFERENCES Patrocinador(NombreComercial)
 );
 
---PatrocinadoresPorReto
+--PatrocinadoresPorCarrera
 CREATE TABLE PatrocinadoresPorCarrera(
     NombreCarrera VARCHAR(20),
     NombreComercial VARCHAR(20),
@@ -168,4 +169,6 @@ CREATE TABLE CuentasBancarias (
     PRIMARY KEY (NombreCarrera, NumeroCuenta),
     FOREIGN KEY (NombreCarrera) REFERENCES Carrera(NombreCarrera)
 );
+
+
 

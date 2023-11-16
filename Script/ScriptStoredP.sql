@@ -787,7 +787,7 @@ BEGIN
     COMMIT;
 END;
 GO
----------------------------------
+---------------------------------Patrocinadores  por reto-----------------------------------------
 CREATE PROCEDURE CrudPatrocinadoresPorReto
     @Operacion VARCHAR(10),
     @NombreReto VARCHAR(20) = NULL,
@@ -833,3 +833,59 @@ BEGIN
     COMMIT;
 END;
 GO
+
+
+---------------------------------Patrocinadores por Carrera----------------------------------------------
+
+
+
+--------------------------------------Cuentas Bancarias--------------------------------------------------
+-- Crear el procedimiento almacenado
+CREATE PROCEDURE GestionarCuentaBancaria
+    @NombreCarrera VARCHAR(20),
+    @NombreBanco VARCHAR(50),
+    @NumeroCuenta VARCHAR(20),
+    @Accion VARCHAR(10)
+AS
+BEGIN
+    -- Iniciar la transacción
+    BEGIN TRANSACTION;
+
+    -- Insertar una nueva cuenta bancaria
+    IF @Accion = 'Insertar'
+    BEGIN
+        INSERT INTO CuentasBancarias (NombreCarrera, NombreBanco, NumeroCuenta)
+        VALUES (@NombreCarrera, @NombreBanco, @NumeroCuenta);
+    END
+
+    -- Seleccionar todas las cuentas bancarias de una carrera
+    ELSE IF @Accion = 'Seleccionar'
+    BEGIN
+        SELECT *
+        FROM CuentasBancarias
+        WHERE NombreCarrera = @NombreCarrera;
+    END
+
+    -- Seleccionar una cuenta bancaria específica
+    ELSE IF @Accion = 'SeleccionarUno'
+    BEGIN
+        SELECT *
+        FROM CuentasBancarias
+        WHERE NombreCarrera = @NombreCarrera AND NumeroCuenta = @NumeroCuenta;
+    END
+
+    -- Eliminar una cuenta bancaria
+    ELSE IF @Accion = 'Eliminar'
+    BEGIN
+        DELETE FROM CuentasBancarias
+        WHERE NombreCarrera = @NombreCarrera AND NumeroCuenta = @NumeroCuenta;
+    END
+
+    -- Confirmar la transacción
+    COMMIT TRANSACTION;
+END;
+
+-- Eliminar procedimientos almacenados
+DROP PROCEDURE IF EXISTS CrudUsuariosPorCarrera;
+DROP PROCEDURE IF EXISTS CrudPatrocinadoresPorReto;
+DROP PROCEDURE IF EXISTS GestionarCuentaBancaria;
