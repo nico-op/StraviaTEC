@@ -186,6 +186,36 @@ namespace StraviaWebApi
             return NoContent();
         }
 
+        // Se añade la vista
+
+        [HttpGet("AmigosUsuario")]
+        public IActionResult GetAmigosUsuario(string nombreUsuario)
+        {
+            var amigos = new List<Usuario>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT Foto, NombreUsuario FROM VistaAmigosUsuario WHERE UsuarioOrigen = @NombreUsuario", connection))
+                {
+                    command.Parameters.AddWithValue("@NombreUsuario", nombreUsuario);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var amigo = new Usuario
+                            {
+                                Foto = reader["Foto"].ToString(),
+                                NombreUsuario = reader["NombreUsuario"].ToString()
+                            };
+                            amigos.Add(amigo);
+                        }
+                    }
+                }
+            }
+            return Ok(amigos);
+        }
+
 
 
 

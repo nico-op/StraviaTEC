@@ -2,25 +2,17 @@
 --- View: VistaActividadesUsuario
 --- Función: Muestra la actividades realizadas por un usuario.
 
-CREATE VIEW VistaActividadesUsuario AS
-SELECT *
-FROM Actividad
-WHERE NombreUsuario = 'NombreUsuario';
-GO
-
-
--- View: VistaCarrerasDisponibles
--- Función: Muestra las carreras disponibles
-CREATE VIEW VistaCarrerasDisponibles AS
-SELECT *
-FROM Carrera;
+CREATE VIEW VistaActividadesAmigo AS
+SELECT A.*
+FROM Actividad A
+INNER JOIN Amigo AM ON A.NombreUsuario = AM.UsuarioDestino;
 GO
 
 
 -- View: VistaAmigosUsuario
 -- Función: Muestra los amigos de un Usuario
 CREATE VIEW VistaAmigosUsuario AS
-SELECT *
-FROM Amigo
-WHERE UsuarioOrigen = 'NombreUsuario';
-Go
+SELECT U.NombreUsuario, U.Foto
+FROM Amigo A
+INNER JOIN Usuario U ON A.UsuarioDestino = U.NombreUsuario;
+GO

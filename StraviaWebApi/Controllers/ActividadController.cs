@@ -124,5 +124,39 @@ namespace StraviaTEC.Controllers
             return Ok();
         }
 
+
+        // Se ejecutan las vistas
+        [HttpGet("ActividadesAmigo")]
+        public IActionResult GetActividadesAmigo()
+        {
+            var actividades = new List<Actividad>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM VistaActividadesAmigo", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var actividad = new Actividad
+                            {
+                                ActividadId = Convert.ToInt32(reader["ActividadId"]),
+                                TipoActividad = reader["TipoActividad"].ToString(),
+                                Kilometraje = Convert.ToInt32(reader["Kilometraje"]),
+                                Altitud = Convert.ToInt32(reader["Altitud"]),
+                                Ruta = reader["Ruta"].ToString(),
+                                FechaHora = Convert.ToDateTime(reader["FechaHora"]),
+                                Duracion = Convert.ToInt32(reader["Duracion"]),
+                                NombreUsuario = reader["NombreUsuario"].ToString()
+                            };
+                            actividades.Add(actividad);
+                        }
+                    }
+                }
+            }
+            return Ok(actividades);
+        }
+
     }
 }
