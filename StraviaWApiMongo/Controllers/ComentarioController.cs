@@ -7,9 +7,8 @@ using Microsoft.OpenApi.Models;
 using StraviaWApiMongo.Services;
 
 namespace StraviaWApiMongo.Controllers;
-
-[Route("/")]
 [ApiController]
+[Route("api/[controller]")]
 public class ComentarioController : ControllerBase
 {
     private readonly MongoDBService _mongoDBService;

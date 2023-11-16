@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin\\Release\\net7.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/098e3bb7-8b55-433d-a2d1-51ff751ca5fa/resourceGroups/servicesApiWeb/providers/Microsoft.Web/sites/mongoapiservice"
+}

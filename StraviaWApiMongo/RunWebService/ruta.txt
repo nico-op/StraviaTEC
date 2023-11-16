@@ -1,0 +1,1 @@
+https://mongoapiservice.azurewebsites.net/swagger/index.html
