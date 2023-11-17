@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:movil/ruta/google_map.dart';
 
 void main() {
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void startTimer() {
     if (!isRunning) {
       stopwatch.start();
-      timer = Timer.periodic(Duration(seconds: 1), _updateTimer);
+      timer = Timer.periodic(const Duration(seconds: 1), _updateTimer);
       setState(() {
         isRunning = true;
       });
@@ -94,7 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
-          // Aquí colocas tu widget de pantalla de mapa con un tamaño específico
           Expanded(
             child: MapWidget(),
           ),
@@ -109,15 +108,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       Text(
                         'Tiempo: $hours : $minutes : $seconds ',
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                       ),
                       Text(
                         'Distancia: ${kilometers.toStringAsFixed(2)} km',
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                       ),
                       Text(
                         'Velocidad: ${velocidadPromedio.toStringAsFixed(2)} m/s',
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                       ),
                     ],
                   ),
