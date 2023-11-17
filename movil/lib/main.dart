@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:movil/ruta/google_map.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -94,17 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           // Aquí colocas tu widget de pantalla de mapa con un tamaño específico
           Expanded(
-            child: Container(
-              color:
-                  Colors.blue, // Puedes personalizar esto según tus necesidades
-              // Aquí agregarías la lógica para mostrar el mapa
-              child: Center(
-                child: Text(
-                  'mapa',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ),
-              ),
-            ),
+            child: MapWidget(),
           ),
           // Textos
           Padding(
