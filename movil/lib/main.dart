@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:movil/ruta/google_map.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
@@ -31,12 +31,21 @@ class _MyHomePageState extends State<MyHomePage> {
   double kilometers = 0.0, velocidadPromedio = 0.0;
   final double velocidad = 2.0; // Velocidad constante para prueba
   late Stopwatch stopwatch;
-  late Timer timer;
+  late Timer? timer; // Marcar como opcional (?)
+
+  List<LatLng> route = []; // Lista para almacenar la ruta
 
   @override
   void initState() {
     super.initState();
     stopwatch = Stopwatch();
+  }
+
+  // Método para recibir actualizaciones de la ruta desde el widget del mapa
+  void updateRoute(List<LatLng> updatedRoute) {
+    setState(() {
+      route = updatedRoute;
+    });
   }
 
   void _updateTimer(Timer timer) {
@@ -67,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void stopTimer() {
     if (isRunning) {
       stopwatch.stop();
-      timer.cancel();
+      timer?.cancel(); // Verificar si timer no es nulo antes de cancelar
       setState(() {
         isRunning = false;
       });
@@ -83,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
       seconds = 0;
       kilometers = 0.0;
       velocidadPromedio = 0.0;
+      route = []; // Restablecer la ruta
     });
   }
 
@@ -95,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           Expanded(
-            child: MapWidget(),
+            child: MapWidget(onRouteUpdated: updateRoute),
           ),
           // Textos
           Padding(
