@@ -27,4 +27,6 @@ import { ManejoInscripcionComponent } from './manejo-inscripcion/manejo-inscripc
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  
+}
