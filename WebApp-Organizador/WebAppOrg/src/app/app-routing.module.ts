@@ -6,6 +6,7 @@ import { RegistroCarreraComponent } from './registro-carrera/registro-carrera.co
 import { RegistroRetoComponent } from './registro-reto/registro-reto.component';
 import { RegistroGrupoComponent } from './registro-grupo/registro-grupo.component';
 import { ManejoInscripcionComponent } from './manejo-inscripcion/manejo-inscripcion.component';
+import { ReporteComponent } from './reporte/reporte.component';
 
 const routes: Routes = [
   {path: '', component : HomeComponent},
@@ -13,8 +14,8 @@ const routes: Routes = [
   {path: 'registro-carrera', component: RegistroCarreraComponent},
   {path: 'registro-reto', component: RegistroRetoComponent},
   {path: 'registro-grupo', component: RegistroGrupoComponent},
-  {path: 'manejo-incripcion', component: ManejoInscripcionComponent}
-
+  {path: 'manejo-incripcion', component: ManejoInscripcionComponent},
+  {path: 'reporte', component: ReporteComponent},
 ];
 
 @NgModule({

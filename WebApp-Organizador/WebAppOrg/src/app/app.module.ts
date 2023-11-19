@@ -9,6 +9,7 @@ import { RegistroCarreraComponent } from './registro-carrera/registro-carrera.co
 import { RegistroRetoComponent } from './registro-reto/registro-reto.component';
 import { RegistroGrupoComponent } from './registro-grupo/registro-grupo.component';
 import { ManejoInscripcionComponent } from './manejo-inscripcion/manejo-inscripcion.component';
+import { ReporteComponent } from './reporte/reporte.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ManejoInscripcionComponent } from './manejo-inscripcion/manejo-inscripc
     RegistroCarreraComponent,
     RegistroRetoComponent,
     RegistroGrupoComponent,
-    ManejoInscripcionComponent
+    ManejoInscripcionComponent,
+    ReporteComponent
   ],
   imports: [
     BrowserModule,

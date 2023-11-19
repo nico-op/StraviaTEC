@@ -4,43 +4,39 @@
             <div class="col-8">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title text-center">Registro de Atleta</h2>
+                        <h2 class="card-title text-center">Registro de Retos</h2>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="nombre">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre">
+                                    <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre">
                                 </div>
                                 <div class="form-group">
-                                    <label for="primer-apellido">Primer Apellido</label>
-                                    <input type="text" class="form-control" id="primer-apellido" placeholder="Ingrese su primer apellido">
+                                    <label for="tipo-actividad">Tipo de Actividad</label>
+                                    <input type="text" class="form-control" id="tipo-actividad" placeholder="Ingrese el tipo de actividad">
                                 </div>
+                             
                                 <div class="form-group">
-                                    <label for="segundo-apellido">Segundo Apellido</label>
-                                    <input type="text" class="form-control" id="segundo-apellido" placeholder="Ingrese su segundo apellido">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fechaNacimineto">Fecha de nacimeinto</label>
-                                    <input type="date" class="form-control" id="fechaNacimineto" placeholder="Ingrese su feca de nacimiento">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fechaNacimineto">Nacionalidad</label>
-                                    <input type="email" class="form-control" id="fechaNacimineto" placeholder="Ingrese su nacionalidad">
+                                    <label for="periodo">Periodo</label>
+                                    <input type="number" class="form-control" id="periodo" placeholder="Ingrese la cantidad a terminar">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="foto">Foto</label>
-                                    <input type="file" class="form-control" id="foto" placeholder="Ingrese una foto">
+                                    <label for="privacidad">Privacidad</label>
+                                    <select class="form-control" id="privacidad">
+                                        <option value="publico">Público</option>
+                                        <option value="privado">Privado</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="usuario">Usuario</label>
-                                    <input type="text" class="form-control" id="usuario" placeholder="Ingrese su contraseña">
-                                </div>  
+                                    <label for="fondo">Fondo</label>
+                                    <input type="text" class="form-control" id="fondo" placeholder="Ingrese la cantidad de km a realizar">
+                                </div>
                                 <div class="form-group">
-                                    <label for="contraseña">Contraseña</label>
-                                    <input type="password" class="form-control" id="contraseña" placeholder="Ingrese su contraseña">
-                                </div>  
+                                    <label for="altitud">Altitud</label>
+                                    <input type="text" class="form-control" id="altitud" placeholder="Ingrese la cantidad de km a realizar">
+                                </div>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">Enviar</button>
