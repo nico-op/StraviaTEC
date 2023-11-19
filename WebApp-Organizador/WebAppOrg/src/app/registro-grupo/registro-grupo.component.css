@@ -1,0 +1,14 @@
+.body-container {
+    background: url('https://www.trainerroad.com/blog/wp-content/uploads/2021/04/cycling-group-rides-a-guide-to-etiquette-pacelines-drafting-and-safety.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  
+  .card {
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.7); /* Ajusta el valor de opacidad según sea necesario */
+    border-radius: 15px; /* Ajusta según sea necesario */
+    width: 800px; /* Ajusta el ancho de la tarjeta según sea necesario */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
