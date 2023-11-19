@@ -1,12 +1,11 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract class Coordenadas {
   double get latitude;
   double get longitude;
 }
 
-// LatLng para google_maps_flutter
 class GoogleMapsLatLng implements Coordenadas {
   final double latitude;
   final double longitude;
@@ -14,7 +13,6 @@ class GoogleMapsLatLng implements Coordenadas {
   GoogleMapsLatLng(this.latitude, this.longitude);
 }
 
-// LatLng para latlong
 class LatLongLatLng implements Coordenadas {
   final double latitude;
   final double longitude;
@@ -23,7 +21,8 @@ class LatLongLatLng implements Coordenadas {
 }
 
 class GPXHelper {
-  // Función para crear el contenido GPX
+  static const String folderName = 'mi_carpeta';
+
   String generateGPXContent(List<Coordenadas> routePoints) {
     final StringBuffer gpxContent = StringBuffer();
 
@@ -36,6 +35,7 @@ class GPXHelper {
       gpxContent
           .writeln('  <wpt lat="${point.latitude}" lon="${point.longitude}">');
       gpxContent.writeln('    <name>Waypoint</name>');
+      gpxContent.writeln('    <desc>Details about the waypoint</desc>');
       gpxContent.writeln('  </wpt>');
     }
 
@@ -44,48 +44,25 @@ class GPXHelper {
     return gpxContent.toString();
   }
 
-  // Función para guardar el contenido GPX en un archivo
-  // Función para guardar el contenido GPX en un archivo
   Future<void> saveGPXToFile(List<Coordenadas> routePoints,
       {String fileName = 'straviaTEC_route.gpx'}) async {
     String gpxContent = generateGPXContent(routePoints);
 
-    // Utiliza el paquete file_picker para permitir al usuario elegir la ubicación
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['gpx'],
-    );
+    try {
+      // Cambia la dirección a la ubicación deseada
+      String desiredDirectoryPath =
+          'content://com.android.providers.downloads.documents/document/msd%3A20';
 
-    if (result != null && result.files.isNotEmpty) {
-      final File file = File(result.files.single.path!);
+      // Construye la ruta completa del archivo GPX en la ubicación deseada
+      String filePath = '$desiredDirectoryPath/$fileName';
+
+      // Guarda el archivo GPX en la ubicación deseada
+      File file = File(filePath);
       await file.writeAsString(gpxContent);
 
-      print('GPX file saved to: ${file.path}');
-    } else {
-      print('Cancelado por el usuario o no se seleccionó ningún archivo.');
-    }
-  }
-
-  // Función para cargar el contenido de un archivo GPX (opcional)
-  Future<void> loadGPXFromFile() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['gpx'],
-      );
-
-      if (result != null && result.files.isNotEmpty) {
-        final File file = File(result.files.single.path!);
-
-        final String gpxContent = await file.readAsString();
-
-        // Aquí puedes procesar el contenido GPX según tus necesidades
-        print('Loaded GPX content: $gpxContent');
-      } else {
-        print('Cancelado por el usuario o no se seleccionó ningún archivo.');
-      }
+      print('GPX file saved to: $filePath');
     } catch (e) {
-      print('Error loading GPX file: $e');
+      print('Error saving GPX file: $e');
     }
   }
 }
