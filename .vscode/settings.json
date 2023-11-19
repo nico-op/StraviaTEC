@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/098e3bb7-8b55-433d-a2d1-51ff751ca5fa/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/straviamongoapi",
+    "appService.deploySubpath": "StraviaWApiMongo"
+}
