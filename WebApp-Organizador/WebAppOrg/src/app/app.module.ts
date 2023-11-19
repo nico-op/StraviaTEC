@@ -10,6 +10,10 @@ import { RegistroRetoComponent } from './registro-reto/registro-reto.component';
 import { RegistroGrupoComponent } from './registro-grupo/registro-grupo.component';
 import { ManejoInscripcionComponent } from './manejo-inscripcion/manejo-inscripcion.component';
 import { ReporteComponent } from './reporte/reporte.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+
 
 @NgModule({
   declarations: [
@@ -24,7 +28,9 @@ import { ReporteComponent } from './reporte/reporte.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
