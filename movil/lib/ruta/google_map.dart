@@ -1,15 +1,81 @@
+import 'dart:io';
+import 'package:path_provider/path_provider.dart'; // Importa este paquete
+import 'package:xml/xml.dart' as xml;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:movil/ruta/manejo_gpx.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+abstract class Coordenadas {
+  double get latitude;
+  double get longitude;
+}
+
+class GoogleMapsLatLng implements Coordenadas {
+  final double latitude;
+  final double longitude;
+
+  GoogleMapsLatLng(this.latitude, this.longitude);
+}
+
+class LatLongLatLng implements Coordenadas {
+  final double latitude;
+  final double longitude;
+
+  LatLongLatLng(this.latitude, this.longitude);
+}
+
+class KMLHelper {
+  String generateKMLContent(List<Coordenadas> routePoints) {
+    final xml.XmlBuilder kmlBuilder = xml.XmlBuilder();
+
+    kmlBuilder.processing(
+        'xml', 'version="1.0" encoding="UTF-8" standalone="no"');
+    kmlBuilder.element('kml', namespaces: {
+      'xmlns': 'http://www.opengis.net/kml/2.2',
+    }, nest: () {
+      kmlBuilder.element('Document', nest: () {
+        for (Coordenadas point in routePoints) {
+          kmlBuilder.element('Placemark', nest: () {
+            kmlBuilder.element('Point', nest: () {
+              kmlBuilder.element('coordinates',
+                  nest: '${point.longitude},${point.latitude}');
+            });
+          });
+        }
+      });
+    });
+
+    return kmlBuilder.buildDocument().toXmlString(pretty: true, indent: '  ');
+  }
+
+  Future<void> saveKMLToFile(List<Coordenadas> routePoints,
+      {String fileName = 'straviaTEC_route.kml'}) async {
+    String kmlContent = generateKMLContent(routePoints);
+
+    try {
+      // Obtiene el directorio de documentos del usuario
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
+      // Construye la ruta completa del archivo KML
+      String filePath = '${documentsDirectory.path}/$fileName';
+
+      // Guarda el archivo KML en la carpeta de documentos
+      File file = File(filePath);
+      await file.writeAsString(kmlContent);
+
+      print('KML file saved to: $filePath');
+    } catch (e) {
+      print('Error saving KML file: $e');
+    }
+  }
+}
 
 class MapWidget extends StatefulWidget {
   final Function(List<LatLng>) onRouteUpdated;
 
   const MapWidget({Key? key, required this.onRouteUpdated}) : super(key: key);
 
-  // Modifica esta función para transformar LatLng de latlong a google_maps_flutter
   List<Coordenadas> transformarPuntos(List<LatLng> puntos) {
     return puntos
         .map((latLng) => GoogleMapsLatLng(latLng.latitude, latLng.longitude))
@@ -25,7 +91,7 @@ class _MapWidgetState extends State<MapWidget> {
   LatLng? _currentPosition;
   Set<Marker> _markers = {};
   List<LatLng> _routePoints = [];
-  GPXHelper gpxHelper = GPXHelper();
+  KMLHelper kmlHelper = KMLHelper();
 
   @override
   void initState() {
@@ -96,10 +162,10 @@ class _MapWidgetState extends State<MapWidget> {
     });
   }
 
-  Future<void> _saveRouteToGPX() async {
+  Future<void> _saveRouteToKML() async {
     List<Coordenadas> coordenadas = widget.transformarPuntos(_routePoints);
-    await gpxHelper.saveGPXToFile(coordenadas);
-    print('Ruta guardada');
+    await kmlHelper.saveKMLToFile(coordenadas);
+    print('Ruta guardada como KML');
   }
 
   @override
@@ -132,10 +198,10 @@ class _MapWidgetState extends State<MapWidget> {
           ),
           ElevatedButton(
             onPressed: () {
-              _saveRouteToGPX(); // Llama al método aquí
-              print('Ruta guardada');
+              _saveRouteToKML(); // Llama al método aquí
+              print('Ruta guardada como KML');
             },
-            child: Text('Guardar Ruta'),
+            child: Text('Guardar Ruta como KML'),
           ),
         ],
       ),

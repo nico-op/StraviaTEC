@@ -47,6 +47,7 @@ dependencies:
   http: ^1.1.0
   google_maps_flutter: ^2.5.0
   file_picker: ^5.2.10
+  xml: ^6.4.2
 
 dev_dependencies:
   flutter_test:
