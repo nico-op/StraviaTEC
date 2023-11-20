@@ -1,0 +1,14 @@
+.body-container {
+    background: url('https://wallpapercave.com/wp/wp2042562.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  
+  .card {
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.7); /* Ajusta el valor de opacidad según sea necesario */
+    border-radius: 15px; /* Ajusta según sea necesario */
+    width: 800px; /* Ajusta el ancho de la tarjeta según sea necesario */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  

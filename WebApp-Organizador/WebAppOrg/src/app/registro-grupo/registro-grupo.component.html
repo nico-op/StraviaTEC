@@ -1,0 +1,40 @@
+<div class="body-container">
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="height: 100vh">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center">Registro de Grupo</h2>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" class="form-control" id="nombre" placeholder="Ingrese nombre del grupo">
+                                </div>
+                                <div class="form-group">
+                                    <label for="primer-apellido">Descripción</label>
+                                    <input type="text" class="form-control" id="descripcion" placeholder="Ingrese descripción">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin">Administrador</label>
+                                    <input type="text" class="form-control" id="admin" placeholder="Ingrese el administrador">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="fecha">Fecha</label>
+                                    <input type="date" class="form-control" id="fecha" placeholder="Ingrese la fecha de creación">
+                                </div>
+                                <div class="form-group">
+                                    <label for="id">Usuario</label>
+                                    <input type="text" class="form-control" id="id" placeholder="Ingrese código de ingreso">
+                                </div>  
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" (click)="enviarDato()">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
