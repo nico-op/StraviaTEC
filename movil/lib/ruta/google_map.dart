@@ -1,10 +1,11 @@
 import 'dart:io';
-import 'package:path_provider/path_provider.dart'; // Importa este paquete
-import 'package:xml/xml.dart' as xml;
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:path_provider/path_provider.dart'; // Importa este paquete
 import 'package:permission_handler/permission_handler.dart';
+import 'package:xml/xml.dart' as xml;
 
 abstract class Coordenadas {
   double get latitude;
@@ -174,7 +175,7 @@ class _MapWidgetState extends State<MapWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Map Widget'),
+        title: Text('Ruta'),
       ),
       body: Column(
         children: [

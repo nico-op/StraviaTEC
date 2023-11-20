@@ -1,9 +1,6 @@
 import 'dart:io';
-<<<<<<< Updated upstream
-=======
 
-import 'package:file_saver/file_saver.dart';
->>>>>>> Stashed changes
+import 'package:file_picker/file_picker.dart';
 
 abstract class Coordenadas {
   double get latitude;
@@ -25,10 +22,7 @@ class LatLongLatLng implements Coordenadas {
 }
 
 class GPXHelper {
-  static const String folderName = 'mi_carpeta';
-
   String generateGPXContent(List<Coordenadas> routePoints) {
-    // Aquí debes reemplazar con tu lógica para generar el contenido GPX
     final StringBuffer gpxContent = StringBuffer();
 
     gpxContent
@@ -49,31 +43,50 @@ class GPXHelper {
 
   Future<void> saveGPXToFile(List<Coordenadas> routePoints) async {
     try {
-      // Solicitar directorio al usuario
-      String? selectedDirectoryPath = await getDirectoryPath();
+      // Solicitar al usuario que seleccione la carpeta de destino
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-      // Solicitar nombre de archivo al usuario
-      String fileName = await inputFileNameFromUser();
+      if (result == null) {
+        print('La selección de la carpeta fue cancelada.');
+        return;
+      }
 
-      // Generar contenido GPX
-      String gpxContent = generateGPXContent(routePoints);
+      // Mostrar al usuario las rutas seleccionadas
+      print('Rutas seleccionadas:');
+      for (String? path in result.paths) {
+        if (path != null) {
+          print(path);
+        }
+      }
 
-      // Construir ruta de archivo
-      String filePath = '$selectedDirectoryPath/$fileName';
+      // Permitir al usuario seleccionar la ruta específica
+      print('Seleccione la ruta donde desea guardar el archivo:');
+      int selectedPathIndex = int.parse(stdin.readLineSync() ?? '0');
 
-      // Guardar archivo
-      File file = File(filePath);
-      await file.writeAsString(gpxContent);
+      // Verificar si el índice seleccionado es válido
+      if (selectedPathIndex >= 0 && selectedPathIndex < result.paths.length) {
+        // Construir ruta de archivo
+        String fileName = await inputFileNameFromUser();
+        String? selectedPath = result.paths[selectedPathIndex];
 
-      print('Archivo GPX guardado en: $filePath');
+        // Verificar si la ruta seleccionada no es nula
+        if (selectedPath != null) {
+          String filePath = '$selectedPath/$fileName';
+
+          // Guardar archivo
+          File file = File(filePath);
+          await file.writeAsString(generateGPXContent(routePoints));
+
+          print('Archivo GPX guardado en: $filePath');
+        } else {
+          print('La ruta seleccionada es nula.');
+        }
+      } else {
+        print('Índice seleccionado no válido.');
+      }
     } catch (e) {
       print('Error guardando archivo GPX: $e');
     }
-  }
-
-  Future<String> getDirectoryPath() async {
-    // Remover initialFileName ya que no es un parámetro válido para saveFile
-    return await FileSaver.instance.saveFile(name: '');
   }
 
   Future<String> inputFileNameFromUser() async {
