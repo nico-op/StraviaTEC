@@ -1,0 +1,36 @@
+body {
+    background-image: url('/assets/fondo1.jpg');
+    background-size: cover;
+    background-position: center;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .container {
+    text-align: center;
+    color: #fff;
+  }
+  
+  h1 {
+    color: #333; /* Cambia el color del texto según tus preferencias */
+  }
+  
+  button {
+    margin: 10px;
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #007bff; /* Cambia el color del botón según tus preferencias */
+    color: #fff; /* Cambia el color del texto del botón según tus preferencias */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Cambia el color al pasar el mouse sobre el botón según tus preferencias */
+  }
