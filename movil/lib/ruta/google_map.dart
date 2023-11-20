@@ -92,6 +92,7 @@ class _MapWidgetState extends State<MapWidget> {
   Set<Marker> _markers = {};
   List<LatLng> _routePoints = [];
   KMLHelper kmlHelper = KMLHelper();
+  List<LatLng> polylineCoordinates = [];
 
   @override
   void initState() {
@@ -158,6 +159,7 @@ class _MapWidgetState extends State<MapWidget> {
   void _addRoutePoint(LatLng position) {
     setState(() {
       _routePoints.add(position);
+      polylineCoordinates.add(position); // Update polylineCoordinates here
       widget.onRouteUpdated(_routePoints);
     });
   }
@@ -193,6 +195,12 @@ class _MapWidgetState extends State<MapWidget> {
                   color: Colors.blue,
                   points: _routePoints,
                 ),
+                Polyline(
+                  polylineId: PolylineId('polyline'),
+                  color: Colors.red,
+                  points: polylineCoordinates,
+                  width: 2,
+                ),
               },
             ),
           ),
@@ -202,6 +210,15 @@ class _MapWidgetState extends State<MapWidget> {
               print('Ruta guardada como KML');
             },
             child: Text('Guardar Ruta como KML'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _routePoints.clear();
+                polylineCoordinates.clear();
+              });
+            },
+            child: Text('Clear Route'),
           ),
         ],
       ),
