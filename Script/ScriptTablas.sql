@@ -77,6 +77,7 @@ CREATE TABLE Patrocinador(
 
 
 
+
 --Grupo
 CREATE TABLE Grupo( 
 	NombreGrupo VARCHAR(20) NOT NULL,
@@ -87,8 +88,6 @@ CREATE TABLE Grupo(
 	PRIMARY KEY (GrupoID),
 	UNIQUE(NombreGrupo)
 );
-
-
 
 
 --Comentario 
