@@ -1,0 +1,40 @@
+<body>
+    <form class="login" (ngSubmit)="f.form.valid && registrarUsuario()" #f="ngForm">
+        <h1>StraviaTEC</h1>
+        <input type="text" placeholder="Nombre" 
+            [(ngModel)]="newUsuario.nombre" name="nombre" #nombre="ngModel"
+            [ngClass]="{'is-invalid': f.submitted && nombre.invalid}"
+            required>
+
+        <input type="text" placeholder="Apellido"
+            [(ngModel)]="newUsuario.apellido" name="apellido" #apellido="ngModel"
+            [ngClass]="{'is-invalid': f.submitted && apellido.invalid}"
+            required>
+
+        <input type="date" placeholder="Fecha de nacimiento"
+            [(ngModel)]="newUsuario.fechaNacimiento" name="fechaNacimiento" #fechaNacimiento="ngModel"
+            [ngClass]="{'is-invalid': f.submitted && fechaNacimiento.invalid}"
+            required>
+
+        <input type="text" placeholder="Nacionalidad"
+            [(ngModel)]="newUsuario.nacionalidad" name="nacionalidad" #nacionalidad="ngModel"
+            [ngClass]="{'is-invalid': f.submitted && nacionalidad.invalid}"
+            required>
+
+        <input type="text" placeholder="Nombre de usuario"
+            [(ngModel)]="newUsuario.nombreUsuario" name="nombreUsuario" #nombreUsuario="ngModel"
+            [ngClass]="{'is-invalid': f.submitted && nombreUsuario.invalid}"
+            required>
+
+        <input type="password" placeholder="Contraseña"
+            [(ngModel)]="newUsuario.contrasena" name="contrasena" #contrasena="ngModel"
+            [ngClass]="{'is-invalid': f.submitted && contrasena.invalid}"
+            required>
+
+        <input type="file" class="form-control" (change)="onFileChange($event)">
+        <img [src]="imageSrc" *ngIf="imageSrc" style="height: 200px; width:200px">
+
+        <button (click)="signIn()">Iniciar Sesión</button>
+        <button type="submit">Registrarse</button>
+    </form>
+</body>
