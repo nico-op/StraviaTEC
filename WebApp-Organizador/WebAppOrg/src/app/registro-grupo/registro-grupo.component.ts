@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../api.service';
 
+
 @Component({
   selector: 'app-registro-grupo',
   templateUrl: './registro-grupo.component.html',
@@ -31,6 +32,7 @@ export class RegistroGrupoComponent {
     this.apiService.postData(urlGrupo, dataGrupo).subscribe(
       (response) => {
         console.log('Respuesta de la API Grupo:', response);
+
       },
       (error) => {
         console.error('Error en la API Grupo:', error);
