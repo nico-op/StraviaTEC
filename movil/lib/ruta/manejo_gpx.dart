@@ -1,4 +1,9 @@
 import 'dart:io';
+<<<<<<< Updated upstream
+=======
+
+import 'package:file_saver/file_saver.dart';
+>>>>>>> Stashed changes
 
 abstract class Coordenadas {
   double get latitude;
@@ -23,6 +28,7 @@ class GPXHelper {
   static const String folderName = 'mi_carpeta';
 
   String generateGPXContent(List<Coordenadas> routePoints) {
+    // Aquí debes reemplazar con tu lógica para generar el contenido GPX
     final StringBuffer gpxContent = StringBuffer();
 
     gpxContent
@@ -38,30 +44,41 @@ class GPXHelper {
       gpxContent.writeln('  </wpt>');
     }
 
-    gpxContent.writeln('</gpx>');
-
     return gpxContent.toString();
   }
 
-  Future<void> saveGPXToFile(List<Coordenadas> routePoints,
-      {String fileName = 'straviaTEC_route.gpx'}) async {
-    String gpxContent = generateGPXContent(routePoints);
-
+  Future<void> saveGPXToFile(List<Coordenadas> routePoints) async {
     try {
-      // Cambia la dirección a la ubicación deseada
-      String desiredDirectoryPath =
-          'content://com.android.providers.downloads.documents/document/msd%3A20';
+      // Solicitar directorio al usuario
+      String? selectedDirectoryPath = await getDirectoryPath();
 
-      // Construye la ruta completa del archivo GPX en la ubicación deseada
-      String filePath = '$desiredDirectoryPath/$fileName';
+      // Solicitar nombre de archivo al usuario
+      String fileName = await inputFileNameFromUser();
 
-      // Guarda el archivo GPX en la ubicación deseada
+      // Generar contenido GPX
+      String gpxContent = generateGPXContent(routePoints);
+
+      // Construir ruta de archivo
+      String filePath = '$selectedDirectoryPath/$fileName';
+
+      // Guardar archivo
       File file = File(filePath);
       await file.writeAsString(gpxContent);
 
-      print('GPX file saved to: $filePath');
+      print('Archivo GPX guardado en: $filePath');
     } catch (e) {
-      print('Error saving GPX file: $e');
+      print('Error guardando archivo GPX: $e');
     }
+  }
+
+  Future<String> getDirectoryPath() async {
+    // Remover initialFileName ya que no es un parámetro válido para saveFile
+    return await FileSaver.instance.saveFile(name: '');
+  }
+
+  Future<String> inputFileNameFromUser() async {
+    print('Ingresa el nombre del archivo GPX:');
+    String? name = stdin.readLineSync();
+    return name ?? 'straviaTEC_route.gpx';
   }
 }
