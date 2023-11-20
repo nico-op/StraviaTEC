@@ -1,19 +1,19 @@
-import{Component, OnInit} from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {UsuarioModel} from 'src/app/Models/Usuario.model';
+import { Usuario } from '../../Models/Usuario';
+import { PostService } from '../../Services/Post/post.service';
 
 @Component({
   selector: 'app-registrar',
   templateUrl: './registrar.component.html',
-  styleUrl: './registrar.component.css'
+  styleUrls: ['./registrar.component.css'] // Corrige 'styleUrl' a 'styleUrls'
 })
-export class RegistrarComponent {
+export class RegistrarComponent implements OnInit { // Corrige 'ngOnInIt' a 'ngOnInit'
 
   public files: any = [];
-  imageSrc: string="";
+  imageSrc: string = "";
 
-  newUsuario: UsuarioModel = {
+  newUsuario: Usuario = {
     nombre: '',
     apellido: '',
     fechaNacimiento: new Date(),
@@ -23,17 +23,18 @@ export class RegistrarComponent {
     foto: '',
     correo: '',
     edad: 0
-}
-@param router
-@param postSvc
-constructor(private router: Router, private postSvc: PostService) { }
+  };
 
-ngOnInIt(): void{}
-signIn(){
-  this.router.navigate(["login"]);
+  constructor(private router: Router, private postSvc: PostService) { }
+
+  ngOnInit(): void {} // Corrige 'ngOnInIt' a 'ngOnInit'
+
+  signIn() {
+    this.router.navigate(["login"]);
   }
 
-  onFileChange(event:any){
+  onFileChange(event: any) {
+    const reader = new FileReader(); // Agrega esta línea para inicializar el lector de archivos
     const [file] = event.target.files;
     reader.readAsDataURL(file);
     reader.onload = () => {
@@ -41,13 +42,13 @@ signIn(){
       this.newUsuario.foto = this.imageSrc;
     };
   }
-  registrarUsuario(){
-    this.postSvc.signUpAthlete(this.newAthlete).subscribe(
-      res =>{
+
+  registrarUsuario() {
+    this.postSvc.registrarUsuario(this.newUsuario).subscribe(
+      res => {
         if (res == "") {
           this.router.navigate(["login"]);
-        }
-        else {
+        } else {
           if (res[0].message_id == 2601) {
             alert("El nombre de usuario ingresado ya existe.");
           }

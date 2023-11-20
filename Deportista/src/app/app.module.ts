@@ -7,6 +7,8 @@ import { ComponentsModule } from './Components/components.module';
 import { RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { MapService } from './Services/Map/map.service';
+import{ FormsModule} from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { MapService } from './Services/Map/map.service';
     AppRoutingModule,
     RouterModule,
     ComponentsModule,
-    PagesModule
+    PagesModule,
+    FormsModule
   ],
 
   //Services

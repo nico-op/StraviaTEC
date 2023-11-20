@@ -16,7 +16,7 @@ import { UsuarioPorReto } from "../../Models/UsuarioPorReto";
  * Post para el Api
  */
 export class PostService {
-    private baseURL = 'https://localhost:5001/api/';//cambiar
+    private baseURL = 'https://serviceapistraviatec.azurewebsites.net/api/';//cambiar
 
     constructor(private http: HttpClient) {}
 
@@ -46,7 +46,7 @@ export class PostService {
      * @param Activitidad 
      * @returns
      */
-    createActivity(activitad: Actividad): Observable<any>{
+    crearActividad(activitad: Actividad): Observable<any>{
         return this.http.post<any>(this.baseURL + "Activitidad", activitad);
     }
 

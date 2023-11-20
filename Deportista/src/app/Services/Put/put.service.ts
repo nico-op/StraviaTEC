@@ -14,7 +14,7 @@ import { Usuario } from "../../Models/Usuario";
  */
 export class PutService {
     
-    private baseURL = 'https://localhost:5001/api/';//cambiar
+    private baseURL = 'https://serviceapistraviatec.azurewebsites.net/api/';//cambiar
 
     constructor(private http: HttpClient) {}
     
